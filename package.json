@@ -1,21 +1,21 @@
 {
-  "name": "fpchapapp",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "dependencies": {
-    "express": "^4.15.2",
-    "pug": "^2.0.0-beta11",
-    "vue": "^2.2.6"
-  },
-  "devDependencies": {},
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/montanna/fpchapapp/"
-  },
-  "author": "",
-  "license": "ISC"
+    "name": "fpchapapp",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "dependencies": {
+        "express": "^4.15.2",
+        "pug": "^2.0.0-beta11",
+        "vue": "^2.2.6"
+    },
+    "devDependencies": {},
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/montanna/fpchapapp/"
+    },
+    "author": "",
+    "license": "ISC"
 }
