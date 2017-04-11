@@ -1,6 +1,106 @@
-h1 {
-    font-family: 'Calibri Light';
+/*Mixins*/
+
+@mixin hover {
     &:hover {
-        color: red;
+        cursor: pointer;
     }
+}
+
+@mixin smooth {
+    transition: all 0.3s cubic-bezier(0.3, 0, 0.3, 1);
+}
+
+
+/*Colors*/
+
+$medBlue: #2D9CDB;
+$medGray: #828282;
+$amt: 20%; //amount of difference for darken/lighten functions
+
+/*Global styles*/
+
+body {
+    font-family: 'Open Sans', 'Calibri Light', Verdana;
+    color: $medGray;
+    margin: 0;
+}
+
+h1,
+h2,
+h3 {
+    font-family: 'Bitter';
+    font-weight: 300;
+}
+
+
+/*Navbar styling*/
+
+nav {
+    @include hover;
+    width: 100vw;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background-color: $medBlue;
+    color: #fff;
+    max-height: 100%;
+    transition: max-height 0.6s cubic-bezier(0.3, 0, 0.3, 1);
+    overflow: hidden;
+    //the list of links in the nav bar
+    & > ul {
+        margin-top: 50px; //height of the nav bar
+        //each individual link
+        & > li {
+            list-style: none;
+            padding: 10px;
+            @include smooth;
+            &:hover {
+                background: lighten($medBlue, $amt);
+            }
+        }
+    }
+    //the hamburger icon at the right of the mobile nav
+    & > div {
+        max-width: 50px;
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        &.navCollapseToggleBtn > i {
+            font-size: 32px;
+        }
+    }
+    //when the collapse class is applied, the navbar 'rolls up'
+    &.collapse {
+        max-height: 50px;
+    }
+}
+
+#navHeader {
+    margin: 10px;
+    & > span {
+        font-family: 'Open Sans';
+        font-weight: 200;
+    }
+}
+
+
+/*Section styling*/
+
+.section {
+    width: 100vw;
+    min-height: 100vh;
+    padding-top: 10px;
+}
+
+
+/*Section 1 styling*/
+
+#section1 {
+    margin-top: 50px; //height of nav bar
+}
+
+#userWelcome {
+    margin: 0 auto;
+    margin-top: 20px;
+    text-align: center;
 }

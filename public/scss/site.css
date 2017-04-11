@@ -1,6 +1,67 @@
-h1 {
-  font-family: 'Calibri Light'; }
-  h1:hover {
-    color: red; }
+/*Mixins*/
+/*Colors*/
+/*Global styles*/
+body {
+  font-family: 'Open Sans', 'Calibri Light', Verdana;
+  color: #828282;
+  margin: 0; }
+
+h1,
+h2,
+h3 {
+  font-family: 'Bitter';
+  font-weight: 300; }
+
+/*Navbar styling*/
+nav {
+  width: 100vw;
+  position: fixed;
+  top: 0;
+  left: 0;
+  background-color: #2D9CDB;
+  color: #fff;
+  max-height: 100%;
+  transition: max-height 0.6s cubic-bezier(0.3, 0, 0.3, 1);
+  overflow: hidden; }
+  nav:hover {
+    cursor: pointer; }
+  nav > ul {
+    margin-top: 50px; }
+    nav > ul > li {
+      list-style: none;
+      padding: 10px;
+      transition: all 0.3s cubic-bezier(0.3, 0, 0.3, 1); }
+      nav > ul > li:hover {
+        background: #84c5ea; }
+  nav > div {
+    max-width: 50px;
+    position: absolute;
+    top: 10px;
+    right: 10px; }
+    nav > div.navCollapseToggleBtn > i {
+      font-size: 32px; }
+  nav.collapse {
+    max-height: 50px; }
+
+#navHeader {
+  margin: 10px; }
+  #navHeader > span {
+    font-family: 'Open Sans';
+    font-weight: 200; }
+
+/*Section styling*/
+.section {
+  width: 100vw;
+  min-height: 100vh;
+  padding-top: 10px; }
+
+/*Section 1 styling*/
+#section1 {
+  margin-top: 50px; }
+
+#userWelcome {
+  margin: 0 auto;
+  margin-top: 20px;
+  text-align: center; }
 
 /*# sourceMappingURL=site.css.map */

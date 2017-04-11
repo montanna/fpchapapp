@@ -1,6 +1,28 @@
 html
 	head
+		link(href="https://fonts.googleapis.com/css?family=Bitter|Open+Sans:300,400|Material+Icons" rel="stylesheet")
+		meta(name="viewport" content="width=device-width, initial-scale=1.0")
 		style
 			include ../public/scss/site.css
 	body
-		h1 Hello world!
+		//navbar
+		nav.mobile.collapse(id="navbar" v-on:click="toggleNav")
+			h1(id="navHeader") ChapApp | 
+				span {{page}}
+			ul
+				li
+					a Home
+				li
+					a Submit
+				li
+					a Reports
+			div.navCollapseToggleBtn(v-on:click="toggleNav")
+				i.material-icons menu
+		//section 1
+		div.section(id="section1")
+			h2(id="userWelcome") Welcome, {{user}}!
+		//section 2
+		div.section(id="section2")
+		//scripts
+		script(src="https://unpkg.com/vue") //Vue CDN
+		script(src="../public/js/site.js")  
