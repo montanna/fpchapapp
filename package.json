@@ -5,7 +5,8 @@
   "main": "index.js",
   "dependencies": {
     "express": "^4.15.2",
-    "pug": "^2.0.0-beta11"
+    "pug": "^2.0.0-beta11",
+    "vue": "^2.2.6"
   },
   "devDependencies": {},
   "scripts": {
