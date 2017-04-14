@@ -9,7 +9,7 @@ html
 			//navbar
 			nav.collapse(id="navbar" v-on:click="toggleNav")
 				h1(id="navHeader") ChapApp | 
-					span {{getPageFromScrollPos()}}
+					span {{getPageFromScrollPos}}
 				ul
 					li
 						a Home
@@ -19,26 +19,34 @@ html
 						a Reports
 					li(v-on:click="showModal")
 						a Log In
+					li(v-on:click="signOut")
+						a Log Out
 				div.navCollapseToggleBtn
 					i.material-icons menu
 			//section 1
 			div.section(id="section1")
-				h2(id="userWelcome") Welcome, {{user.name}}!
+				h2(id="userWelcome") {{ user.name.length > 0 ? "Welcome, " + user.name : "Please log in."}}
 				hr
-				div.flexParent.homeBtnRow
-					div.mapBtn
-						img(src="public/img/map-icon.png")
-						p View map
-					div.graphBtn
-						img(src="public/img/graph-icon.png")
-						p View trends
-					div.reportBtn
-						img(src="public/img/report-icon.png")
-						p Print report
-				div.btnBlue.submitBtn Submit <br/> activity report
-				hr
-				div.message(v-for= "item in messages")
-					h4 {{item.date}}
+				//display this row only if the user has admin access
+				template(v-if="user.role === 'admin'")
+					div.flexParent.homeBtnRow
+						div.mapBtn
+							img(src="public/img/map-icon.png")
+							p View map
+						div.graphBtn
+							img(src="public/img/graph-icon.png")
+							p View trends
+						div.reportBtn
+							img(src="public/img/report-icon.png")
+							p Print report
+					div.addBtn
+						i.material-icons add
+				//display the rest of the section only if the user actually exists
+				template(v-if="user.name.length > 0")
+					div.btnBlue.submitBtn(v-on:click="startReport") Submit <br/> activity report
+					hr
+					div.message(v-for= "item in messages")
+						h4 {{item.date}}
 
 			//section 2
 			div.section(id="section2")

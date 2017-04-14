@@ -26,6 +26,7 @@ body {
     font-family: 'Open Sans', 'Calibri Light', Verdana;
     color: $medGray;
     margin: 0;
+    overflow-x: hidden;
 }
 
 h1,
@@ -255,4 +256,30 @@ nav {
     margin: 0 auto;
     padding: 5px;
     margin-top: 10px;
+}
+
+.addBtn {
+    position: fixed;
+    bottom: 10px;
+    right: 10px;
+    background: $red;
+    color: #fff;
+    padding: 10px;
+    border-radius: 120px;
+    box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.8);
+    width: 24px;
+    transition: width 0.3s ease;
+    &:hover {
+        width: 120px;
+        border-radius: 5px;
+        cursor: pointer;
+        & > i {
+            font-size: 11px;
+            &::after {
+                opacity: 100;
+                content: "Add a new message";
+                font-family: "Open sans";
+            }
+        }
+    }
 }

@@ -41,8 +41,11 @@
          // find and set user
          firebase.auth().onAuthStateChanged((user) => {
 
-             if (!user)
+             if (!user) {
+                 vm.user.role = "";
                  return;
+             }
+             //Communicate via the interface that login was successful
              var dang = document.getElementsByClassName("danger");
              var passInput = document.getElementById("pass");
              var pWarning = document.getElementById("warning");
@@ -52,17 +55,30 @@
                  dang[i].classList.remove("danger");
 
              }
-
-
-
+             //set user data in the viewmodel
              vm.user.uid = user.uid;
              vm.user.name = user.displayName;
 
+             //get list of users with admin role to see if the current user is one
+             var ref = firebase.database().ref("users/" + user.uid);
+             var role;
+             ref.on('value', function(snapshot) {
+                 role = snapshot.val().role;
+                 if (role === "admin")
+                     vm.user.role = "admin";
+                 else
+                     vm.user.role = "user";
+             });
+
+
+
+
          });
+
 
      },
      data: {
-         user: { name: "", uid: "" },
+         user: { name: "", uid: "", role: "" },
          email: "",
          pass: "",
          warning: "",
@@ -73,8 +89,7 @@
 
          ]
      },
-     methods: {
-
+     computed: {
          getPageFromScrollPos: function() {
              //checks the scroll positition, then sets the label in the nav bar accordingly
              var pos = document.body.scrollTop;
@@ -82,7 +97,9 @@
              var s2 = document.getElementById("section2").getBoundingClientRect().top;
              if (pos < s2) return "Home";
              else return "";
-         },
+         }
+     },
+     methods: {
          toggleNav: function() {
              //toggles the collapsed state of the navbar
              var nav = document.getElementById("navbar");
@@ -131,6 +148,16 @@
                  }
              });
          },
+         signOut: function() {
+             firebase.auth().signOut();
+             //clear the user name and role so that the interface doesn't show anything to a nonuser
+             vm.user.name = "";
+             vm.user.role = "";
+             //clear the login warning
+             vm.warning = "";
+             var pWarning = document.getElementById(warning);
+             warning.classList = ""; //remove success or danger class that may be applied to login warning
+         },
          closeModal: function() {
              var modal = document.getElementById("modal");
              modal.style.display = "none";
@@ -139,6 +166,10 @@
              var modal = document.getElementById("modal");
              modal.style.display = "block";
          },
+         startReport: function() {
+
+         }
+
      }
  })
 
