@@ -13,9 +13,12 @@
 
 /*Colors*/
 
+$red: #F03737;
+$green: #23BC68;
 $medBlue: #2D9CDB;
+$ltGray: #c6c6c6;
 $medGray: #828282;
-$amt: 20%; //amount of difference for darken/lighten functions
+$amt: 10%; //amount of difference for darken/lighten functions
 
 /*Global styles*/
 
@@ -32,6 +35,117 @@ h3 {
     font-weight: 300;
 }
 
+hr {
+    margin: 20px;
+    border: transparent;
+    border-bottom: 0.1px solid $ltGray;
+}
+
+input {
+    border-radius: 6px;
+    border: 1px solid $ltGray;
+    padding: 5px;
+    margin: 5px;
+    color: $ltGray;
+    font-family: 'Open Sans';
+}
+
+input:focus {
+    box-shadow: 0px 0px 10px $medBlue;
+    border: 1px solid $medBlue;
+    color: darken($medGray, $amt);
+    outline: none;
+}
+
+.danger {
+    border: 2px solid $red!important;
+    background: lighten($red, $amt * 3.5)!important;
+    color: $red!important;
+}
+
+.success {
+    border: 2px solid $green!important;
+    background: lighten($green, $amt * 4)!important;
+    color: $green!important;
+}
+
+.flexParent {
+    display: flex;
+    justify-content: center;
+    flex-direction: row;
+    & > div {
+        flex: 0 1 auto;
+    }
+}
+
+.btn {
+    border-radius: 4px;
+    padding: 10px;
+    margin: 10px;
+    color: #fff;
+    font-family: 'Open Sans';
+    font-weight: 400;
+    text-align: center;
+    text-transform: uppercase;
+}
+
+.btnBlue {
+    @extend .btn;
+    background-color: $medBlue;
+    box-shadow: 0px 6px 0px darken($medBlue, $amt);
+    transition: 0.3s all ease;
+    &:hover {
+        background-color: darken($medBlue, $amt);
+    }
+}
+
+.btnGreen {
+    @extend .btn;
+    background-color: $green;
+    box-shadow: 0px 6px 0px darken($green, $amt);
+    transition: 0.3s all ease;
+    &:hover {
+        background-color: darken($green, $amt);
+    }
+}
+
+.modal {
+    width: 100vw;
+    height: 100vh;
+    max-width: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background: rgba(10, 10, 10, 0.8);
+    display: none;
+    & > .modalInner {
+        background: #fff;
+        box-shadow: 3px 3px 9px #222222;
+        text-align: center;
+        width: 80vw;
+        max-width: 80%;
+        height: 80vh;
+        padding: 10px;
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        margin: auto;
+        border-radius: 6px;
+        & > .login > p {
+            padding: 5px;
+            border-radius: 6px;
+        }
+        & > .close {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            @include hover;
+        }
+    }
+}
+
 
 /*Navbar styling*/
 
@@ -44,8 +158,11 @@ nav {
     background-color: $medBlue;
     color: #fff;
     max-height: 100%;
+    transition: all 0.6s cubic-bezier(0.3, 0, 0.3, 1);
     transition: max-height 0.6s cubic-bezier(0.3, 0, 0.3, 1);
     overflow: hidden;
+    border-bottom: 3px solid lighten($medBlue, $amt);
+    box-shadow: 3px 0px 9px rgba(0, 0, 0, 0.7);
     //the list of links in the nav bar
     & > ul {
         margin-top: 50px; //height of the nav bar
@@ -72,6 +189,7 @@ nav {
     //when the collapse class is applied, the navbar 'rolls up'
     &.collapse {
         max-height: 50px;
+        box-shadow: 1px 0px 2px rgba(0, 0, 0, 0.9);
     }
 }
 
@@ -103,4 +221,38 @@ nav {
     margin: 0 auto;
     margin-top: 20px;
     text-align: center;
+}
+
+.homeBtnRow {
+    margin-top: 20px;
+}
+
+.mapBtn,
+.graphBtn,
+.reportBtn {
+    text-align: center;
+    flex: 0.1 1 auto!important;
+    & > img {
+        width: 25vw;
+    }
+    & > p {
+        text-align: center;
+        font-size: 0.8em;
+        margin: 0 auto;
+    }
+}
+
+.submitBtn {
+    max-width: 80%;
+    margin: 0 auto;
+    margin-top: 20px;
+    font-size: 18px;
+}
+
+.message {
+    background: lighten($ltGray, $amt);
+    width: 80%;
+    margin: 0 auto;
+    padding: 5px;
+    margin-top: 10px;
 }
