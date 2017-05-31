@@ -1,7 +1,9 @@
+<!DOCTYPE html>
 html
 	head
 		link(href="https://fonts.googleapis.com/css?family=Bitter|Open+Sans:300,400,700|Material+Icons" rel="stylesheet")
 		meta(name="viewport" content="width=device-width, initial-scale=1.0")
+		title ChapApp
 		style
 			include ../public/scss/site.css
 	body
@@ -9,12 +11,12 @@ html
 			//navbar
 			nav.collapse(id="navbar" v-on:click="toggleNav")
 				h1(id="navHeader") ChapApp | 
-					span {{getPageFromScrollPos}}
+					span(v-html="page")
 				ul
-					li
-						a Home
-					li
-						a Submit
+					li#section1Btn(v-on:click="scrollTo")
+						a#section1Btn Home
+					li#section2Btn(v-on:click="scrollTo") 
+						a#section2Btn Submit
 					li
 						a Reports
 					li(v-on:click="showModal")
@@ -23,15 +25,15 @@ html
 						a Log Out
 				div.navCollapseToggleBtn
 					i.material-icons menu
-			//section 1
+			//section 1 - HOME
 			div.section(id="section1")
 				h2(id="userWelcome") {{ user.name.length > 0 ? "Welcome, " + user.name : "Please log in."}}
 				hr
 				//display this row only if the user has admin access
 				template(v-if="user.role === 'admin'")
 					div.flexParent.homeBtnRow
-						div.mapBtn
-							img(src="public/img/map-icon.png")
+						div#section3Btn.mapBtn(v-on:click="scrollTo")
+							img#section3Btn(src="public/img/map-icon.png")
 							p View map
 						div.graphBtn
 							img(src="public/img/graph-icon.png")
@@ -43,13 +45,42 @@ html
 						i.material-icons add
 				//display the rest of the section only if the user actually exists
 				template(v-if="user.name.length > 0")
-					div.btnBlue.submitBtn(v-on:click="startReport") Submit <br/> activity report
+					div#section2Btn.btnBlue.submitBtn(v-on:click="scrollTo") Submit <br/> activity report
 					hr
 					div.message(v-for= "item in messages")
 						h4 {{item.date}}
-
-			//section 2
+			hr
+			//section 2 - SUBMIT REPORT
 			div.section(id="section2")
+				//this is where the forms go
+				div.flexParent
+					h2.textCenter Submit Activity Report
+					hr
+					div(v-for= "item in reportTypes" v-bind:class="item.class" v-bind:id="item.index" v-on:click="selectReport")
+						span(v-bind:id="item.index") {{item.title}}
+
+				div#card
+					i.material-icons.close(v-on:click="hideCard") close
+					div.step 1
+					h2.inline Basic Info
+					div.progress.p10
+					div.form.flexParent
+						label Event #
+						input
+						label Case #
+						input
+						label Duty status
+						select
+							option Select
+							option Follow-up
+							option Primary duty
+							option Self-initiated
+					
+
+			
+			div.section(id="section3")
+				div#map
+			
 			//login modal
 			div.modal(id="modal")
 				div.modalInner
@@ -62,11 +93,14 @@ html
 						div.btnBlue.signUpBtn(v-on:click="signUp") Sign Up
 					div.close(v-on:click="closeModal")
 						i.material-icons close
-		//scripts
+		//firebase
 		script(src="https://www.gstatic.com/firebasejs/3.7.6/firebase.js")
-	
+		//vue
 		script(src="../public/js/vue.js")  
 		// DEVELOPMENT ^
 		//script(src="../public/js/vue.min.js") 
 		// PRODUCTION ^
-		script(src="../public/js/site.js")  
+		script(src="../public/js/site.js")
+		//google maps  
+		script(v-if="vm.user.role === 'admin'" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDQqrtGt0Cdb6aD9z83enxHrHyX_6yLX40&callback=initMap"
+    async defer)
