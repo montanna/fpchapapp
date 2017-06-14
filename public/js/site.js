@@ -34,6 +34,7 @@
              var pWarning = document.getElementById("warning");
              pWarning.classList.add("success");
              vm.warning = "Success! You are now logged in.";
+             //remove danger style from elements so as not to confuse the user
              for (var i = 0; i < dang.length; i++) {
                  dang[i].classList.remove("danger");
 
@@ -63,12 +64,13 @@
          pass: "",
          warning: "",
          selectedReport: { index: 0, class: "", title: "" },
+         currentStep: { index: 1, title: "Basic info", progress: "p10" },
          messages: [
              { date: "4/13/2017" },
              { date: "4/11/2017" },
          ],
          reportTypes: [
-             { index: 0, class: "btnPurple", title: "RISE Report", steps: [""] },
+             { index: 0, class: "btnPurple", title: "RISE Report" },
              { index: 1, class: "btnRed", title: "Domestic Disturbance Report" },
              { index: 2, class: "btnBlue", title: "Chaplain Activity Report" }
          ]
@@ -142,14 +144,51 @@
          },
          showCard: function() {
              var card = document.getElementById("card");
+             var page1 = document.getElementById("page1");
              card.style.left = "0";
+             page1.style.left = "0";
              vm.page = "<small>" + vm.selectedReport.title + "</small>";
 
          },
          hideCard: function() {
              var card = document.getElementById("card");
+             var pages = document.getElementsByClassName("page");
+             for (var i = 0; i < pages.length; i++) {
+                 pages[i].style.display = "none";
+             }
              card.style.left = "100vw";
+
+             for (var i = 0; i < pages.length; i++) {
+                 pages[i].style.left = "100vw";
+             }
+             setTimeout(
+                 function() {
+                     for (var i = 0; i < pages.length; i++) {
+                         pages[i].style.display = "block";
+                     }
+                 }, 1000);
+             if (vm.selectedReport.index === 0) {
+                 vm.currentStep.index = 1;
+                 vm.currentStep.title = "Basic info";
+                 vm.currentStep.progress = "p10";
+             }
              vm.page = "Report";
+         },
+         nextCard: function(event) {
+             var pageNumber = event.target.id.slice(0, -4);
+             var num = pageNumber.slice(-1);
+             var prev = document.getElementById("page" + num);
+             var next = document.getElementById("page" + (parseInt(num) + 1));
+             if (prev) prev.style.left = "-100vw";
+             next.style.left = "0";
+             if (vm.selectedReport.index === 0) {
+                 if (num === "1") {
+                     vm.currentStep.index = 2;
+                     vm.currentStep.title = "Time & date";
+                     vm.currentStep.progress = "p20";
+                 }
+             }
+
          },
          selectReport: function() {
              var index = event.target.id;

@@ -2,6 +2,8 @@
 html
 	head
 		link(href="https://fonts.googleapis.com/css?family=Bitter|Open+Sans:300,400,700|Material+Icons" rel="stylesheet")
+		link(rel="icon" type="image/png" href="favicon.png")
+		link(rel="shortcut icon" type="image/png" href="favicon.png")
 		meta(name="viewport" content="width=device-width, initial-scale=1.0")
 		title ChapApp
 		style
@@ -61,20 +63,38 @@ html
 
 				div#card
 					i.material-icons.close(v-on:click="hideCard") close
-					div.step 1
-					h2.inline Basic Info
-					div.progress.p10
-					div.form.flexParent
-						label Event #
-						input
-						label Case #
-						input
-						label Duty status
-						select
-							option Select
-							option Follow-up
-							option Primary duty
-							option Self-initiated
+					div.step {{currentStep.index}}
+					h2.inline {{currentStep.title}}
+					div.progressBar
+						div.progress(v-bind:class="currentStep.progress")
+					div.page#page1
+						div.form.flexParent
+							div.inputGroup
+								label Event #
+								input#eventNo
+							div.inputGroup
+								label Case #
+								input#caseNo
+							div.inputGroup.required
+								label Duty status
+								select#dutyStatus
+									option Select
+									option Follow-up
+									option Primary duty
+									option Self-initiated
+							div.btn.btnBlue#page1Next(v-on:click="nextCard") Next
+					div.page#page2
+						div.form.flexParent
+							div.inputGroup.required
+								label Date
+								input#date(type="date")
+							div.inputGroup.required
+								label Time arrived
+								input#timeArrived(type="time")
+							div.inputGroup.required
+								label Time cleared
+								input#timeCleared(type="time")
+							div.btn.btnBlue#page2Next(v-on:click="nextCard") Next
 					
 
 			
