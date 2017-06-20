@@ -185,10 +185,27 @@
                  if (num === "1") {
                      vm.currentStep.index = 2;
                      vm.currentStep.title = "Time & date";
-                     vm.currentStep.progress = "p20";
+                     vm.currentStep.progress = "p30";
+                 } else if (num === "2") {
+                     vm.currentStep.index = 3;
+                     vm.currentStep.title = "Demographics";
+                     vm.currentStep.progress = "p60";
+                 } else if (num === "3") {
+                     vm.currentStep.index = 4;
+                     vm.currentStep.title = "Event info";
+                     vm.currentStep.progress = "p80";
+
+                 } else if (num === "4") {
+                     vm.currentStep.index = 5;
+                     vm.currentStep.title = "Conclusion";
+                     vm.currentStep.progress = "p100";
                  }
              }
 
+         },
+         submitForm: function() {
+             //TODO: make this function
+             console.log("Form submitted.");
          },
          selectReport: function() {
              var index = event.target.id;
