@@ -63,6 +63,7 @@
          email: "",
          pass: "",
          warning: "",
+         group: false,
          selectedReport: { index: 0, class: "", title: "" },
          currentStep: { index: 1, title: "Basic info", progress: "p10" },
          messages: [
@@ -72,7 +73,7 @@
          reportTypes: [
              { index: 0, class: "btnPurple", title: "RISE Report" },
              { index: 1, class: "btnRed", title: "Domestic Disturbance Report" },
-             { index: 2, class: "btnBlue", title: "Chaplain Activity Report" }
+             { index: 2, class: "btnBlue", title: "Patrol Activity Report" }
          ]
      },
      methods: {
@@ -201,6 +202,26 @@
                      vm.currentStep.progress = "p100";
                  }
              }
+             if (vm.selectedReport.index === 2) {
+                 if (num === "1") {
+                     vm.currentStep.index = 2;
+                     vm.currentStep.title = "Time & date";
+                     vm.currentStep.progress = "p30";
+                 } else if (num === "2") {
+                     vm.currentStep.index = 3;
+                     vm.currentStep.title = "Demographics";
+                     vm.currentStep.progress = "p60";
+                 } else if (num === "3") {
+                     vm.currentStep.index = 4;
+                     vm.currentStep.title = "Event info";
+                     vm.currentStep.progress = "p80";
+
+                 } else if (num === "4") {
+                     vm.currentStep.index = 5;
+                     vm.currentStep.title = "Conclusion";
+                     vm.currentStep.progress = "p100";
+                 }
+             }
 
          },
          submitForm: function() {
@@ -258,6 +279,10 @@
 
              }, 10);
 
+         },
+         showMap: function() {
+             var map = document.getElementById("map");
+             map.style.display = "block!important";
          }
 
 
