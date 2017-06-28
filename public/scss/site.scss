@@ -80,7 +80,6 @@ input:focus {
 }
 
 .danger {
-    border: 2px solid $red!important;
     background: lighten($red, $amt * 3.5)!important;
     color: $red!important;
 }

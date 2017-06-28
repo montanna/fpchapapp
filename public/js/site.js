@@ -124,6 +124,7 @@
          warning: "",
          group: false,
          currentStep: { index: 0, title: "Basic info", progress: "p10", steps: {} },
+         submitAlert: "Success! Thank you for submitting your report.",
          reportAddress: [],
          report: {
              address: ""
@@ -277,8 +278,20 @@
              }
          },
          submitForm: function() {
-             //TODO: make this function
-             console.log("Form submitted.");
+             vm.nextStep();
+             var ref = firebase.database().ref("users/" + vm.user.uid + "/reports");
+             var req = document.getElementsByClassName("required");
+             var done = true;
+             for (var i = 0; i < req.length; i++) {
+                 if (!req[i].children[1].value || req[i].children[1].value.length == 0) {
+                     req[i].classList += " danger";
+                     done = false;
+                 }
+             }
+             if (done) {
+                 vm.submitAlert = "Success! Thank you for submitting your report."
+                 ref.push(vm.report);
+             } else vm.submitAlert = "Please fill out all required fields before submitting."
          },
          selectReport: function() {
              var index = event.target.id;

@@ -46,7 +46,6 @@ input:focus {
   outline: none; }
 
 .danger, .pages > .page > .form > .empty > input, .pages > .page > .form > .empty > label {
-  border: 2px solid #f97b7b !important;
   background: white !important;
   color: #f97b7b !important; }
 
