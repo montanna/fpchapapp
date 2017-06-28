@@ -13,6 +13,63 @@
  firebase.initializeApp(config);
 
 
+ //Initialize Google Map plugin
+ var map;
+ var geocoder;
+ var infowindow;
+
+ function initMap() {
+     map = new google.maps.Map(document.getElementById('map'), {
+         center: { lat: 36.737376, lng: -119.788185 },
+         zoom: 11
+     });
+
+     geocoder = new google.maps.Geocoder;
+     infowindow = new google.maps.InfoWindow;
+
+ }
+
+
+ function geocodeAddress(geocoder, resultsMap) {
+     var address = "700 Van Ness Ave Fresno CA"
+     geocoder.geocode({ 'address': address }, function(results, status) {
+         if (status === 'OK') {
+             resultsMap.setCenter(results[0].geometry.location);
+             var marker = new google.maps.Marker({
+                 map: resultsMap,
+                 position: results[0].geometry.location
+             });
+         } else {
+             alert('Geocode was not successful for the following reason: ' + status);
+         }
+     });
+ }
+
+ function geocodeLatLng(geocoder, map, infowindow, latitude, longitude) {
+     var latlng = { lat: latitude, lng: longitude };
+     geocoder.geocode({ 'location': latlng }, function(results, status) {
+         if (status === 'OK') {
+             if (results[0]) {
+                 map.setZoom(11);
+                 var marker = new google.maps.Marker({
+                     position: latlng,
+                     map: map
+                 });
+                 infowindow.setContent(results[0].formatted_address);
+                 vm.report.address = results[0].address_components[0].short_name + " " + results[0].address_components[1].short_name;
+                 vm.report.city = results[0].address_components[3].short_name;
+                 vm.report.state = results[0].address_components[5].short_name;
+                 vm.report.zip = results[0].address_components[7].short_name;
+                 infowindow.open(map, marker);
+             } else {
+                 window.alert('No results found');
+             }
+         } else {
+             window.alert('Geocoder failed due to: ' + status);
+         }
+     });
+ }
+
 
 
 
@@ -64,18 +121,24 @@
          pass: "",
          warning: "",
          group: false,
-         selectedReport: { index: 0, class: "", title: "" },
-         currentStep: { index: 1, title: "Basic info", progress: "p10" },
+         currentStep: { index: 0, title: "Basic info", progress: "p10", steps: {} },
+         reportAddress: [],
+         report: {
+             address: ""
+         },
          messages: [
              { date: "4/13/2017" },
              { date: "4/11/2017" },
          ],
          reportTypes: [
-             { index: 0, class: "btnPurple", title: "RISE Report" },
-             { index: 1, class: "btnRed", title: "Domestic Disturbance Report" },
-             { index: 2, class: "btnBlue", title: "Patrol Activity Report" }
-         ]
+             { index: 0, class: "btnPurple", title: "RISE Report", steps: [{ index: 0, title: "Basic info", progress: "p10" }, { index: 1, title: "Time & date", progress: "p20" }, { index: 2, title: "Demographics", progress: "p40" }, { index: 3, title: "Location", progress: "p60" }, { index: 4, title: "Event info", progress: "p80" }, { index: 5, title: "Conclusion", progress: "p90" }, { index: 6, title: "Submit", progress: "p100" }] },
+             { index: 1, class: "btnRed", title: "Domestic Disturbance Report", steps: [{ index: 0, title: "Basic info", progress: "p10" }, { index: 1, title: "Time & date", progress: "p20" }] },
+             { index: 2, class: "btnBlue", title: "Patrol Activity Report", steps: [{ index: 0, title: "Basic info", progress: "p10" }, { index: 1, title: "Time & date", progress: "p20" }] }
+         ],
+
+         selectedReport: { index: 0, class: "btnPurple", title: "RISE Report", steps: [{ index: 0, title: "Basic info", progress: "p10" }, { index: 1, title: "Time & date", progress: "p20" }] }
      },
+
      methods: {
          toggleNav: function() {
              //toggles the collapsed state of the navbar
@@ -145,84 +208,71 @@
          },
          showCard: function() {
              var card = document.getElementById("card");
-             var page1 = document.getElementById("page1");
+             var pageContainer = document.getElementsByClassName("pages")[0];
              card.style.left = "0";
-             page1.style.left = "0";
-             vm.page = "<small>" + vm.selectedReport.title + "</small>";
+             pageContainer.style.left = "0";
+             document.body.classList += " noScroll";
+             setTimeout(function() {
+                 vm.page = "<small>" + vm.selectedReport.title + "</small>";
+             }, 300)
 
          },
          hideCard: function() {
              var card = document.getElementById("card");
-             var pages = document.getElementsByClassName("page");
-             for (var i = 0; i < pages.length; i++) {
-                 pages[i].style.display = "none";
-             }
+             var pageContainer = document.getElementsByClassName("pages")[0];
              card.style.left = "100vw";
-
-             for (var i = 0; i < pages.length; i++) {
-                 pages[i].style.left = "100vw";
-             }
-             setTimeout(
-                 function() {
-                     for (var i = 0; i < pages.length; i++) {
-                         pages[i].style.display = "block";
-                     }
-                 }, 1000);
-             if (vm.selectedReport.index === 0) {
-                 vm.currentStep.index = 1;
-                 vm.currentStep.title = "Basic info";
-                 vm.currentStep.progress = "p10";
-             }
+             pageContainer.style.display = "none";
+             pageContainer.style.left = "100vw";
+             //reset step number and label
+             vm.currentStep = vm.reportTypes[vm.selectedReport.index].steps[0];
+             setTimeout(function() {
+                 pageContainer.style.display = "flex";
+             }, 300)
              vm.page = "Report";
+             document.body.classList = "";
          },
-         nextCard: function(event) {
-             var pageNumber = event.target.id.slice(0, -4);
-             var num = pageNumber.slice(-1);
-             var prev = document.getElementById("page" + num);
-             var next = document.getElementById("page" + (parseInt(num) + 1));
-             if (prev) prev.style.left = "-100vw";
-             next.style.left = "0";
-             if (vm.selectedReport.index === 0) {
-                 if (num === "1") {
-                     vm.currentStep.index = 2;
-                     vm.currentStep.title = "Time & date";
-                     vm.currentStep.progress = "p30";
-                 } else if (num === "2") {
-                     vm.currentStep.index = 3;
-                     vm.currentStep.title = "Demographics";
-                     vm.currentStep.progress = "p60";
-                 } else if (num === "3") {
-                     vm.currentStep.index = 4;
-                     vm.currentStep.title = "Event info";
-                     vm.currentStep.progress = "p80";
+         nextStep: function() {
+             var curStep = vm.currentStep;
+             var nextStep = vm.reportTypes[vm.selectedReport.index].steps[vm.currentStep.index + 1];
+             var pageContainer = document.getElementsByClassName("pages")[0];
+             var left = pageContainer.style.left || 0;
+             var loc = parseInt(left, 10);
+             loc -= 100;
+             loc += "vw";
+             pageContainer.style.left = loc;
+             if (nextStep)
+                 vm.currentStep = nextStep;
 
-                 } else if (num === "4") {
-                     vm.currentStep.index = 5;
-                     vm.currentStep.title = "Conclusion";
-                     vm.currentStep.progress = "p100";
-                 }
+         },
+         chooseStep: function(e) {
+             var stepNum = e.target.classList[2]; //target step number
+             stepNum = stepNum.slice(1, 2); //just cut off the number at the end
+             var step = parseInt(stepNum, 10);
+             step -= 1; //because the array index and the number we want to display are offset by 1
+             var targetStep = vm.selectedReport.steps[step]; //index of target step in the selected report's steps array
+             var pageContainer = document.getElementsByClassName("pages")[0];
+             var left = pageContainer.style.left || 0;
+             var loc = parseInt(left, 10);
+             var diff = vm.currentStep.index - step;
+             loc += (100 * diff);
+             loc += "vw";
+             pageContainer.style.left = loc;
+             //reset step number and label
+             vm.currentStep = vm.reportTypes[vm.selectedReport.index].steps[step];
+         },
+         showSteps: function() {
+             var stepchildren = document.getElementsByClassName("stepchild");
+             for (var i = 0; i < stepchildren.length; i++) {
+                 stepchildren[i].style.width = "30px";
+                 stepchildren[i].style.height = "30px";
              }
-             if (vm.selectedReport.index === 2) {
-                 if (num === "1") {
-                     vm.currentStep.index = 2;
-                     vm.currentStep.title = "Time & date";
-                     vm.currentStep.progress = "p30";
-                 } else if (num === "2") {
-                     vm.currentStep.index = 3;
-                     vm.currentStep.title = "Demographics";
-                     vm.currentStep.progress = "p60";
-                 } else if (num === "3") {
-                     vm.currentStep.index = 4;
-                     vm.currentStep.title = "Event info";
-                     vm.currentStep.progress = "p80";
-
-                 } else if (num === "4") {
-                     vm.currentStep.index = 5;
-                     vm.currentStep.title = "Conclusion";
-                     vm.currentStep.progress = "p100";
-                 }
+         },
+         hideSteps: function() {
+             var stepchildren = document.getElementsByClassName("stepchild");
+             for (var i = 0; i < stepchildren.length; i++) {
+                 stepchildren[i].style.width = "0px";
+                 stepchildren[i].style.height = "0px";
              }
-
          },
          submitForm: function() {
              //TODO: make this function
@@ -240,9 +290,11 @@
              //this way the id works like an argument being passed to the function
              //and we don't have ~16 different functions to do the exact same thing
              //then we pass the id to the real scroll function hooray
+
              event.stopPropagation();
              var id = event.target.id.slice(0, -3);
              vm.scroll(id);
+
          },
          scroll: function(id) {
              var target = document.getElementById(id);
@@ -283,7 +335,21 @@
          showMap: function() {
              var map = document.getElementById("map");
              map.style.display = "block!important";
+         },
+         getLocation: function() {
+             if (navigator.geolocation) {
+                 navigator.geolocation.getCurrentPosition(vm.showPosition);
+             } else {
+                 alert("Geolocation is not supported by this browser.");
+             }
+         },
+         showPosition: function(pos) {
+             console.log("Latitude: " + pos.coords.latitude);
+             console.log("Longitude: " + pos.coords.longitude);
+             geocodeLatLng(geocoder, map, infowindow, pos.coords.latitude, pos.coords.longitude);
+
          }
+
 
 
      }
@@ -300,34 +366,11 @@
      else vm.page = "Map";
  }
 
- //Initialize Google Map plugin only if user is an admin
- var map;
 
- function initMap() {
-     map = new google.maps.Map(document.getElementById('map'), {
-         center: { lat: 36.737376, lng: -119.788185 },
-         zoom: 11
-     });
-
-     var geocoder = new google.maps.Geocoder();
-
-     //document.getElementById('submit').addEventListener('click', function() {
-     geocodeAddress(geocoder, map);
-     // });
- }
-
-
- function geocodeAddress(geocoder, resultsMap) {
-     var address = "700 Van Ness Ave Fresno CA"
-     geocoder.geocode({ 'address': address }, function(results, status) {
-         if (status === 'OK') {
-             resultsMap.setCenter(results[0].geometry.location);
-             var marker = new google.maps.Marker({
-                 map: resultsMap,
-                 position: results[0].geometry.location
-             });
-         } else {
-             alert('Geocode was not successful for the following reason: ' + status);
-         }
-     });
+ document.body.onload = function() {
+     var ss = document.getElementsByClassName("splashScreen")[0];
+     ss.style.opacity = 0;
+     setTimeout(function() {
+         ss.style.display = "none";
+     }, 300);
  }

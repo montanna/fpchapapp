@@ -8,6 +8,9 @@ app.use(express.static(__dirname));
 app.set('views', "./views");
 app.set('view engine', 'pug');
 
+//TODO: remove before production!
+app.set('view cache', false);
+
 app.get('/', function(request, response) {
     response.render('index');
 });
