@@ -607,6 +607,16 @@ svg {
     animation: spin 2s linear infinite;
 }
 
+#loader {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+    pointer-events: none;
+}
+
 @keyframes spin {
     0% {
         transform: rotate(0deg);

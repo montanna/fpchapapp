@@ -61,6 +61,8 @@
                  vm.report.state = results[0].address_components[5].short_name;
                  vm.report.zip = results[0].address_components[7].short_name;
                  infowindow.open(map, marker);
+                 var loader = document.getElementById("loader");
+                 loader.style.opacity = "0";
              } else {
                  window.alert('No results found');
              }
@@ -337,6 +339,8 @@
              map.style.display = "block!important";
          },
          getLocation: function() {
+             var loader = document.getElementById("loader");
+             loader.style.opacity = "100";
              if (navigator.geolocation) {
                  navigator.geolocation.getCurrentPosition(vm.showPosition);
              } else {
