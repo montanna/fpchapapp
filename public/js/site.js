@@ -135,8 +135,8 @@
          ],
          reportTypes: [
              { index: 0, class: "btnPurple", title: "RISE Report", steps: [{ index: 0, title: "Basic info", progress: "p10" }, { index: 1, title: "Time & date", progress: "p20" }, { index: 2, title: "Demographics", progress: "p40" }, { index: 3, title: "Location", progress: "p60" }, { index: 4, title: "Event info", progress: "p80" }, { index: 5, title: "Conclusion", progress: "p90" }, { index: 6, title: "Submit", progress: "p100" }] },
-             { index: 1, class: "btnRed", title: "Domestic Disturbance Report", steps: [{ index: 0, title: "Basic info", progress: "p10" }, { index: 1, title: "Time & date", progress: "p20" }] },
-             { index: 2, class: "btnBlue", title: "Patrol Activity Report", steps: [{ index: 0, title: "Basic info", progress: "p10" }, { index: 1, title: "Time & date", progress: "p20" }] }
+             { index: 1, class: "btnRed", title: "Domestic Disturbance Report", steps: [{ index: 0, title: "Basic info", progress: "p10" }, { index: 1, title: "Time & date", progress: "p20" }, { index: 2, title: "Demographics", progress: "p40" }, { index: 3, title: "Location", progress: "p60" }, { index: 4, title: "Event info", progress: "p80" }, { index: 5, title: "Conclusion", progress: "p90" }, { index: 6, title: "Submit", progress: "p100" }] },
+             { index: 2, class: "btnBlue", title: "Patrol Activity Report", steps: [{ index: 0, title: "Basic info", progress: "p10" }, { index: 1, title: "Time & date", progress: "p20" }, { index: 2, title: "Demographics", progress: "p40" }, { index: 3, title: "Location", progress: "p60" }, { index: 4, title: "Event info", progress: "p80" }, { index: 5, title: "Conclusion", progress: "p90" }, { index: 6, title: "Submit", progress: "p100" }] }
          ],
 
          selectedReport: {}
@@ -310,7 +310,6 @@
 
              event.stopPropagation();
              var id = event.target.id.slice(0, -3);
-             if (id == "section3") vm.showMap();
              vm.scroll(id);
 
          },
@@ -349,10 +348,6 @@
 
              }, 10);
 
-         },
-         showMap: function() {
-             var map = document.getElementById("map");
-             map.style.opacity = "100";
          },
          getLocation: function() {
              var loader = document.getElementById("loader");
