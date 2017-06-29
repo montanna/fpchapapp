@@ -6,10 +6,6 @@ body {
   color: #777777;
   margin: 0;
   overflow-x: hidden; }
-  body.noScroll {
-    position: fixed;
-    overflow-y: scroll;
-    width: 100%; }
 
 h1,
 h2,
@@ -143,7 +139,7 @@ nav {
   overflow: hidden;
   border-bottom: 3px solid #52c2e4;
   box-shadow: 3px 0px 9px rgba(0, 0, 0, 0.7);
-  z-index: 1; }
+  z-index: 3; }
   nav:hover {
     cursor: pointer; }
   nav > ul {
@@ -167,7 +163,8 @@ nav {
 
 #navHeader {
   margin: 10px;
-  max-width: 90%; }
+  max-width: 90%;
+  font-size: 1.2em; }
   #navHeader > span {
     font-family: 'Open Sans';
     font-weight: 200; }
@@ -185,6 +182,12 @@ nav {
 /*Section 1 styling*/
 #section1 {
   padding-top: 50px; }
+
+#section2 {
+  z-index: 1; }
+
+#section3 {
+  z-index: 0; }
 
 #userWelcome {
   margin: 0 auto;
@@ -253,7 +256,9 @@ svg {
         font-family: "Open sans"; }
 
 /* Section 2 */
-#section2 > #card {
+#card0,
+#card1,
+#card2 {
   z-index: 1;
   position: fixed;
   top: 0;
@@ -264,9 +269,12 @@ svg {
   width: calc(-30px + 100vw);
   padding: 50px 15px;
   transition: left 0.4s ease-in-out; }
-  #section2 > #card > .close {
+  #card0 > .close,
+  #card1 > .close,
+  #card2 > .close {
     float: right;
     padding: 20px 10px; }
+
 #section2 > .flexParent {
   flex-direction: column; }
   #section2 > .flexParent > .btn, #section2 > .flexParent > .btnBlue, #section2 > .flexParent > .btnGreen, #section2 > .flexParent > .btnRed, #section2 > .flexParent > .btnPurple {

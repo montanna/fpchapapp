@@ -32,11 +32,6 @@ body {
     color: $medGray;
     margin: 0;
     overflow-x: hidden;
-    &.noScroll {
-        position: fixed;
-        overflow-y: scroll;
-        width: 100%;
-    }
 }
 
 h1,
@@ -205,7 +200,7 @@ nav {
     overflow: hidden;
     border-bottom: 3px solid lighten($medBlue, $amt);
     box-shadow: 3px 0px 9px rgba(0, 0, 0, 0.7);
-    z-index: 1;
+    z-index: 3;
     //the list of links in the nav bar
     & > ul {
         margin-top: 50px; //height of the nav bar
@@ -239,6 +234,7 @@ nav {
 #navHeader {
     margin: 10px;
     max-width: 90%;
+    font-size: 1.2em;
     & > span {
         font-family: 'Open Sans';
         font-weight: 200;
@@ -263,6 +259,14 @@ nav {
 
 #section1 {
     padding-top: 50px; //height of nav bar
+}
+
+#section2 {
+    z-index: 1;
+}
+
+#section3 {
+    z-index: 0;
 }
 
 #userWelcome {
@@ -342,23 +346,26 @@ svg {
 
 /* Section 2 */
 
-#section2 {
-    & > #card {
-        z-index: 1;
-        position: fixed;
-        top: 0;
-        left: 100vw;
-        background: $bkg;
-        box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
-        height: 100vh;
-        width: calc(-30px + 100vw);
-        padding: 50px 15px;
-        transition: left 0.4s ease-in-out;
-        &>.close {
-            float: right;
-            padding: 20px 10px;
-        }
+#card0,
+#card1,
+#card2 {
+    z-index: 1;
+    position: fixed;
+    top: 0;
+    left: 100vw;
+    background: $bkg;
+    box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+    height: 100vh;
+    width: calc(-30px + 100vw);
+    padding: 50px 15px;
+    transition: left 0.4s ease-in-out;
+    &>.close {
+        float: right;
+        padding: 20px 10px;
     }
+}
+
+#section2 {
     //style the initial screen displaying the buttons to select a report
     & > .flexParent {
         flex-direction: column;

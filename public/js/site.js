@@ -139,7 +139,7 @@
              { index: 2, class: "btnBlue", title: "Patrol Activity Report", steps: [{ index: 0, title: "Basic info", progress: "p10" }, { index: 1, title: "Time & date", progress: "p20" }] }
          ],
 
-         selectedReport: { index: 0, class: "btnPurple", title: "RISE Report", steps: [{ index: 0, title: "Basic info", progress: "p10" }, { index: 1, title: "Time & date", progress: "p20" }] }
+         selectedReport: {}
      },
 
      methods: {
@@ -210,18 +210,19 @@
              modal.style.display = "block";
          },
          showCard: function() {
-             var card = document.getElementById("card");
+             var index = vm.selectedReport.index;
+             var card = document.getElementById("card" + index);
              var pageContainer = document.getElementsByClassName("pages")[0];
              card.style.left = "0";
              pageContainer.style.left = "0";
-             document.body.classList += " noScroll";
              setTimeout(function() {
                  vm.page = "<small>" + vm.selectedReport.title + "</small>";
              }, 300)
 
          },
          hideCard: function() {
-             var card = document.getElementById("card");
+             var index = vm.selectedReport.index;
+             var card = document.getElementById("card" + index);
              var pageContainer = document.getElementsByClassName("pages")[0];
              card.style.left = "100vw";
              pageContainer.style.display = "none";
@@ -298,6 +299,7 @@
              vm.selectedReport = vm.reportTypes[index];
              vm.showCard();
          },
+
          scrollTo: function(event) {
              //when making a button that triggers a scroll to another element,
              //the button's id should be the id of the target + "Btn"
@@ -308,6 +310,7 @@
 
              event.stopPropagation();
              var id = event.target.id.slice(0, -3);
+             if (id == "section3") vm.showMap();
              vm.scroll(id);
 
          },
@@ -349,7 +352,7 @@
          },
          showMap: function() {
              var map = document.getElementById("map");
-             map.style.display = "block!important";
+             map.style.opacity = "100";
          },
          getLocation: function() {
              var loader = document.getElementById("loader");
