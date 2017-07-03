@@ -260,11 +260,7 @@ html
 								div.inputGroup
 									input#address(v-model="report.address" placeholder="Street address")
 								div.inputGroup
-									input#city(v-model="report.city" placeholder="City")
-								div.inputGroup
-									input#state(v-model="report.state" placeholder="State")
-								div.inputGroup
-									input#city(v-model="report.zip" placeholder="Zip code")
+									input#zip(v-model="report.zip" placeholder="Zip code")
 								div.btn.btnBlue#page4Next(v-on:click="nextStep") Next
 						div.page#page5
 							div.form.flexParent
@@ -539,9 +535,13 @@ html
 									label Duty status
 									select#dutyStatus
 										option Select
+										option Dispatched
+										option Backup
 										option Follow-up
-										option Primary duty
+										option No Calls
+										option Ride Along
 										option Self-initiated
+										option Special
 								div.inputGroup.required
 									label Agency assisted
 									select#agency
@@ -568,21 +568,42 @@ html
 								div.btn.btnBlue#page2Next(v-on:click="nextStep") Next
 						div.page#page3
 							div.form.flexParent
+								
 								div.inputGroup
-									label Counseling for
-									select#counseling(v-model="report.counseling")
-										option Select
-										option Child
-										option Family
-										option Staff
-								div.inputGroup
+									div.btn.btnGreen(@click="getLocation") LOCATE ME
+									p or enter the dispatched location:
+									div.inputGroup
+										input#address(v-model="report.address" placeholder="Street address")
+									div.inputGroup
+										input#zip(v-model="report.zip" placeholder="Zip code")
+									div.inputGroup
+										label Area served
+										select#area(v-model="report.area")
+											option Select
+											option NE
+											option NW
+											option SE
+											option SW
+											option HQ
+											option Office
+								
+								div.btn.btnBlue#page3Next(v-on:click="nextStep") Next
+						div.page#page4
+							div.form.flexParent
+								div.inputGroup.required
+									label Name
+									input#name(v-model="report.contactName")
+								div.inputGroup.required
+									label Phone number
+									input#phone(v-model="report.contactName", type="phone")
+								div.inputGroup.required
 									label Gender
 									select#gender(v-model="report.gender")
 										option Select
 										option Female
 										option Male
 										option Other gender
-								div.inputGroup
+								div.inputGroup.required
 									label Ethnicity
 									select#ethnicity(v-model="report.ethnicity")
 										option Select
@@ -592,67 +613,7 @@ html
 										option Asian / Pacific Islander
 										option Native American Indian
 										option Other
-								div.btn.btnBlue#page3Next(v-on:click="nextStep") Next
-						div.page#page4
-							div.form.flexParent
-								div.inputGroup.required
-									label Event classification code
-									select#eventCode(v-model="report.eventCode")
-										option Select
-										option No event issued
-										option 1A - Adults
-										option 1A - Juveniles
-										option 1E - Weapons
-										option 1H - Out of Control
-										option 1H - Curfew
-										option 1H - Truant
-										option 1J - At-risk Person
-										option 1J - Missing Adult
-										option 1J - Missing Juveline
-										option 1J - Runaway Juveline
-										option 1J - Found
-										option 1M - Suicide/Attempt
-										option 1M - Committed WIC 5150
-										option 1M - Sick or Injured / Check Welfare
-										option 1M - Mental Illness
-										option 1M - Overdose (Non-Narcotics Related)
-										option 1N - Suspicious Person
-										option 1N - Suspicious Vehicle
-										option 1N - Prowler Call
-										option 1N - Other Suspicious Circumstances
-										option 2B - Attend Public Meeting
-										option 2B - Security Inspection
-										option 2B - Patrol Watch/Building Check
-										option 4C - Forcible Rape
-										option 4C - Spousal Rape
-										option 4C - Sodomy
-										option 4C - Oral Copulation
-										option 4C - Sexual Battery/Molestation
-										option 4C - Indecent Exposure
-										option 4C - Unlawful Intercourse
-										option 4D - Aggravated Assault
-										option 4D - Simple Battery
-										option 4D - Domestic Violence
-										option 4D - Kidnap
-										option 4I - Selling Alcohol to Minors
-										option 4I - Selling Tobacco to Minors
-										option 4J - Bombing
-										option 4J - Attempt
-										option 4J - Threat
-										option 4J - Possession of Bomb Device
-										option 4J - Found Device
-										option 4K - Child Abuse/Neglect (at risk)
-										option 4K - Prior
-										option 4O - Child Custody
-										option 4O - Domestic Violence-Related
-										option 4O - Other
-										option 4Q - Child Concealment
-										option 4Q - Child Custody
-										option 4S - Possession
-										option 4S - Sales
-										option 4S - Possession for Sale
-										option 4S - Manufacturing/Growing
-								
+							
 								div.btn.btnBlue#page4Next(v-on:click="nextStep") Next
 						div.page#page5
 							div.form.flexParent

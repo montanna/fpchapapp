@@ -359,8 +359,6 @@
              }
          },
          showPosition: function(pos) {
-             console.log("Latitude: " + pos.coords.latitude);
-             console.log("Longitude: " + pos.coords.longitude);
              geocodeLatLng(geocoder, map, infowindow, pos.coords.latitude, pos.coords.longitude);
 
          }
