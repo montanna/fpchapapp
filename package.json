@@ -1,22 +1,24 @@
 {
     "name": "fpchapapp",
     "version": "1.0.0",
-    "description": "",
     "main": "index.js",
     "dependencies": {
         "express": "^4.15.2",
+        "node-sass": "^4.5.3",
+        "npm-run-all": "^4.0.2",
         "pug": "^2.0.0-beta11",
         "vue": "^2.2.6"
     },
     "devDependencies": {},
     "scripts": {
-        "start": "node index.js",
-        "test": "echo \"Error: no test specified\" && exit 1"
+        "build-css": "node-sass --recursive --output public/css --source-map true --source-map-contents public/sass "
     },
     "repository": {
         "type": "git",
+
         "url": "git+https://github.com/montanna/fpchapapp/"
     },
-    "author": "",
-    "license": "ISC"
+    "author": "montanna",
+    "license": "ISC",
+    "description": ""
 }
