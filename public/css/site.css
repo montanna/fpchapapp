@@ -41,7 +41,7 @@ input:focus {
   color: #5e5e5e;
   outline: none; }
 
-.danger, .pages > .page > .form > .empty > input, .pages > .page > .form > .empty > label {
+.danger, .pages > div > .page > .form > .empty > input, .pages > div > .page > .form > .empty > label {
   background: white !important;
   color: #f97b7b !important; }
 
@@ -256,9 +256,7 @@ svg {
         font-family: "Open sans"; }
 
 /* Section 2 */
-#card0,
-#card1,
-#card2 {
+#card {
   z-index: 1;
   position: fixed;
   top: 0;
@@ -269,9 +267,7 @@ svg {
   width: calc(-30px + 100vw);
   padding: 50px 15px;
   transition: left 0.2s ease-in-out; }
-  #card0 > .close,
-  #card1 > .close,
-  #card2 > .close {
+  #card > .close {
     float: right;
     padding: 20px 10px; }
 
@@ -285,8 +281,7 @@ svg {
     margin-top: 20px;
     padding: 15px; }
 
-.step {
-  display: inline-block;
+.step, .stepchild {
   background-color: #26B2DD;
   color: #fff;
   border-radius: 30px;
@@ -295,24 +290,16 @@ svg {
   text-align: center;
   line-height: 30px;
   margin: 20px;
+  z-index: 9;
+  position: absolute; }
+
+.stepchild {
+  width: 0;
+  height: 0;
+  transition: all 0.2s ease-in-out;
+  overflow: hidden;
   position: relative;
-  z-index: 9; }
-  .step > .stepchild {
-    width: 0;
-    height: 0;
-    position: absolute;
-    transition: all 0.2s ease-in-out;
-    overflow: hidden; }
-    .step > .stepchild.s1 {
-      top: -20px; }
-    .step > .stepchild.s2 {
-      top: 20px; }
-    .step > .stepchild.s3 {
-      top: 60px; }
-    .step > .stepchild.s4 {
-      top: 100px; }
-    .step > .stepchild.s5 {
-      top: 140px; }
+  box-shadow: 1px 2px 4px rgba(0, 0, 0, 0.6); }
 
 .progressBar {
   background: #e0e0e0;
@@ -356,32 +343,33 @@ svg {
 .pages {
   position: absolute;
   left: 0px;
-  transition: left 0.2s ease-in-out;
-  display: flex; }
-  .pages > .page {
-    flex: 0 1 auto;
-    width: 100vw; }
-    .pages > .page > .form {
-      flex-direction: column;
-      padding: 15px; }
-      .pages > .page > .form > .btn, .pages > .page > .form > .btnBlue, .pages > .page > .form > .btnGreen, .pages > .page > .form > .btnRed, .pages > .page > .form > .btnPurple {
-        width: calc(100% - 15px);
-        margin: 30px 0; }
-      .pages > .page > .form > .inputGroup > label,
-      .pages > .page > .form > .inputGroup > input,
-      .pages > .page > .form > .inputGroup > select {
-        display: block;
-        flex: 0 1 auto;
-        font-size: 18px; }
-      .pages > .page > .form > .inputGroup > label {
-        margin-top: 10px; }
-      .pages > .page > .form > .required > label {
-        font-weight: bold; }
-        .pages > .page > .form > .required > label:after {
-          content: " *"; }
-      .pages > .page > .form > .empty > label {
-        background: none !important;
-        border: none !important; }
+  transition: left 0.2s ease-in-out; }
+  .pages > div {
+    display: flex; }
+    .pages > div > .page {
+      flex: 0 1 auto;
+      width: 100vw; }
+      .pages > div > .page > .form {
+        flex-direction: column;
+        padding: 15px; }
+        .pages > div > .page > .form > .btn, .pages > div > .page > .form > .btnBlue, .pages > div > .page > .form > .btnGreen, .pages > div > .page > .form > .btnRed, .pages > div > .page > .form > .btnPurple {
+          width: calc(100% - 15px);
+          margin: 30px 0; }
+        .pages > div > .page > .form > .inputGroup > label,
+        .pages > div > .page > .form > .inputGroup > input,
+        .pages > div > .page > .form > .inputGroup > select {
+          display: block;
+          flex: 0 1 auto;
+          font-size: 18px; }
+        .pages > div > .page > .form > .inputGroup > label {
+          margin-top: 10px; }
+        .pages > div > .page > .form > .required > label {
+          font-weight: bold; }
+          .pages > div > .page > .form > .required > label:after {
+            content: " *"; }
+        .pages > div > .page > .form > .empty > label {
+          background: none !important;
+          border: none !important; }
 
 #map {
   height: 75vh; }

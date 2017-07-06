@@ -123,6 +123,7 @@
          pass: "",
          warning: "",
          group: false,
+         stepsVisible: false,
          currentStep: { index: 0, title: "Basic info", progress: "p10", steps: {} },
          submitAlert: "Success! Thank you for submitting your report.",
          reportAddress: [],
@@ -210,8 +211,7 @@
              modal.style.display = "block";
          },
          showCard: function() {
-             var index = vm.selectedReport.index;
-             var card = document.getElementById("card" + index);
+             var card = document.getElementById("card");
              var pageContainer = document.getElementsByClassName("pages")[0];
              card.style.left = "0";
              pageContainer.style.left = "0";
@@ -222,7 +222,7 @@
          },
          hideCard: function() {
              var index = vm.selectedReport.index;
-             var card = document.getElementById("card" + index);
+             var card = document.getElementById("card");
              var pageContainer = document.getElementsByClassName("pages")[0];
              card.style.left = "100vw";
              pageContainer.style.display = "none";
@@ -235,7 +235,8 @@
              vm.page = "Report";
              document.body.classList = "";
          },
-         nextStep: function() {
+         nextStep: function(event) {
+             if (event) event.stopPropagation();
              var curStep = vm.currentStep;
              var nextStep = vm.reportTypes[vm.selectedReport.index].steps[vm.currentStep.index + 1];
              var pageContainer = document.getElementsByClassName("pages")[0];
@@ -249,8 +250,7 @@
 
          },
          chooseStep: function(e) {
-             var stepNum = e.target.classList[2]; //target step number
-             stepNum = stepNum.slice(1, 2); //just cut off the number at the end
+             var stepNum = e.target.innerText;
              var step = parseInt(stepNum, 10);
              step -= 1; //because the array index and the number we want to display are offset by 1
              var targetStep = vm.selectedReport.steps[step]; //index of target step in the selected report's steps array
@@ -270,6 +270,7 @@
                  stepchildren[i].style.width = "30px";
                  stepchildren[i].style.height = "30px";
              }
+             vm.stepsVisible = true;
          },
          hideSteps: function() {
              var stepchildren = document.getElementsByClassName("stepchild");
@@ -277,6 +278,13 @@
                  stepchildren[i].style.width = "0px";
                  stepchildren[i].style.height = "0px";
              }
+             vm.stepsVisible = false;
+         },
+         toggleSteps: function() {
+             if (vm.stepsVisible)
+                 vm.hideSteps();
+             else
+                 vm.showSteps();
          },
          submitForm: function() {
              vm.nextStep();

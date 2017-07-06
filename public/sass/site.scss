@@ -347,9 +347,7 @@ svg {
 
 /* Section 2 */
 
-#card0,
-#card1,
-#card2 {
+#card {
     z-index: 1;
     position: fixed;
     top: 0;
@@ -382,7 +380,6 @@ svg {
 }
 
 .step {
-    display: inline-block;
     background-color: $medBlue;
     color: #fff;
     border-radius: 30px;
@@ -391,30 +388,18 @@ svg {
     text-align: center;
     line-height: 30px;
     margin: 20px;
-    position: relative;
     z-index: 9;
-    & > .stepchild {
-        width: 0;
-        height: 0;
-        position: absolute;
-        transition: all 0.2s ease-in-out;
-        overflow: hidden;
-        &.s1 {
-            top: -20px;
-        }
-        &.s2 {
-            top: 20px;
-        }
-        &.s3 {
-            top: 60px;
-        }
-        &.s4 {
-            top: 100px;
-        }
-        &.s5 {
-            top: 140px;
-        }
-    }
+    position: absolute;
+}
+
+.stepchild {
+    @extend .step;
+    width: 0;
+    height: 0;
+    transition: all 0.2s ease-in-out;
+    overflow: hidden;
+    position: relative;
+    box-shadow: 1px 2px 4px rgba(0, 0, 0, 0.6);
 }
 
 .progressBar {
@@ -472,43 +457,45 @@ svg {
     position: absolute;
     left: 0px;
     transition: left 0.2s ease-in-out;
-    display: flex;
-    & > .page {
-        flex: 0 1 auto;
-        width: 100vw;
-        &> .form {
-            flex-direction: column;
-            padding: 15px;
-            & > .btn {
-                width: calc(100% - 15px);
-                margin: 30px 0;
-            }
-            & > .inputGroup > label,
-            & > .inputGroup > input,
-            & > .inputGroup > select {
-                display: block;
-                flex: 0 1 auto;
-                font-size: 18px;
-            }
-            & > .inputGroup > label {
-                margin-top: 10px;
-            }
-            & > .required > label {
-                font-weight: bold;
-                &:after {
-                    content: " *"; //mark required fields with an asterisk
+    & > div {
+        display: flex;
+        & > .page {
+            flex: 0 1 auto;
+            width: 100vw;
+            &> .form {
+                flex-direction: column;
+                padding: 15px;
+                & > .btn {
+                    width: calc(100% - 15px);
+                    margin: 30px 0;
                 }
-            }
-            & > .empty > input {
-                //apply this class if:
-                // - the field is required
-                // - the field is still empty when the user submits the report
-                @extend .danger;
-            }
-            & > .empty > label {
-                @extend .danger;
-                background: none!important;
-                border: none!important;
+                & > .inputGroup > label,
+                & > .inputGroup > input,
+                & > .inputGroup > select {
+                    display: block;
+                    flex: 0 1 auto;
+                    font-size: 18px;
+                }
+                & > .inputGroup > label {
+                    margin-top: 10px;
+                }
+                & > .required > label {
+                    font-weight: bold;
+                    &:after {
+                        content: " *"; //mark required fields with an asterisk
+                    }
+                }
+                & > .empty > input {
+                    //apply this class if:
+                    // - the field is required
+                    // - the field is still empty when the user submits the report
+                    @extend .danger;
+                }
+                & > .empty > label {
+                    @extend .danger;
+                    background: none!important;
+                    border: none!important;
+                }
             }
         }
     }
