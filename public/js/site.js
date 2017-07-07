@@ -59,7 +59,9 @@
                  vm.report.address = results[0].address_components[0].short_name + " " + results[0].address_components[1].short_name;
                  vm.report.city = results[0].address_components[3].short_name;
                  vm.report.state = results[0].address_components[5].short_name;
-                 vm.report.zip = results[0].address_components[7].short_name;
+                 if (results[0].address_components[7])
+                     vm.report.zip = results[0].address_components[7].short_name;
+                 else vm.report.zip = results[0].address_components[6].short_name;
                  infowindow.open(map, marker);
                  var loader = document.getElementById("loader");
                  loader.style.opacity = "0";
@@ -122,13 +124,15 @@
          email: "",
          pass: "",
          warning: "",
-         group: false,
+         nightMode: false,
          stepsVisible: false,
          currentStep: { index: 0, title: "Basic info", progress: "p10", steps: {} },
          submitAlert: "Success! Thank you for submitting your report.",
          reportAddress: [],
          report: {
-             address: ""
+             group: false,
+             address: "",
+             zip: ""
          },
          messages: [
              { date: "4/13/2017" },
@@ -136,7 +140,7 @@
          ],
          reportTypes: [
              { index: 0, class: "btnPurple", title: "RISE Report", steps: [{ index: 0, title: "Basic info", progress: "p10" }, { index: 1, title: "Time & date", progress: "p20" }, { index: 2, title: "Demographics", progress: "p40" }, { index: 3, title: "Location", progress: "p60" }, { index: 4, title: "Event info", progress: "p80" }, { index: 5, title: "Conclusion", progress: "p90" }, { index: 6, title: "Submit", progress: "p100" }] },
-             { index: 1, class: "btnRed", title: "Domestic Disturbance Report", steps: [{ index: 0, title: "Basic info", progress: "p10" }, { index: 1, title: "Time & date", progress: "p20" }, { index: 2, title: "Demographics", progress: "p40" }, { index: 3, title: "Location", progress: "p60" }, { index: 4, title: "Event info", progress: "p80" }, { index: 5, title: "Conclusion", progress: "p90" }, { index: 6, title: "Submit", progress: "p100" }] },
+             { index: 1, class: "btnRed", title: "Domestic Disturbance Report", steps: [{ index: 0, title: "Basic info", progress: "p10" }, { index: 1, title: "Time & date", progress: "p20" }, { index: 2, title: "Location", progress: "p30" }, { index: 3, title: "Primary contact", progress: "p40" }, { index: 4, title: "Event info", progress: "p50" }, { index: 5, title: "Referred to", progress: "p60" }, { index: 6, title: "Referred to (continued)", progress: "p70" }, { index: 7, title: "Referred to (continued)", progress: "p80" }, { index: 8, title: "Conclusion", progress: "p90" }, { index: 9, title: "Submit", progress: "p100" }] },
              { index: 2, class: "btnBlue", title: "Patrol Activity Report", steps: [{ index: 0, title: "Basic info", progress: "p10" }, { index: 1, title: "Time & date", progress: "p20" }, { index: 2, title: "Demographics", progress: "p40" }, { index: 3, title: "Location", progress: "p60" }, { index: 4, title: "Event info", progress: "p80" }, { index: 5, title: "Conclusion", progress: "p90" }, { index: 6, title: "Submit", progress: "p100" }] }
          ],
 
@@ -233,6 +237,7 @@
                  pageContainer.style.display = "flex";
              }, 300)
              vm.page = "Report";
+             vm.report = {};
              document.body.classList = "";
          },
          nextStep: function(event) {
@@ -247,6 +252,9 @@
              pageContainer.style.left = loc;
              if (nextStep)
                  vm.currentStep = nextStep;
+             setTimeout(function() {
+                 //do nothing
+             }, 200);
 
          },
          chooseStep: function(e) {
@@ -369,6 +377,12 @@
          showPosition: function(pos) {
              geocodeLatLng(geocoder, map, infowindow, pos.coords.latitude, pos.coords.longitude);
 
+         },
+         toggleMode: function() {
+             if (vm.nightMode)
+                 vm.nightMode = false;
+             else
+                 vm.nightMode = true;
          }
 
 

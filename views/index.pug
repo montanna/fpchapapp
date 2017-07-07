@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 html
 	head
-		link(href="https://fonts.googleapis.com/css?family=Bitter|Open+Sans:300,400,700|Material+Icons" rel="stylesheet")
+		link(href="https://fonts.googleapis.com/css?family=Bitter|Lato:300,400,700|Material+Icons" rel="stylesheet")
 		link(rel="icon" type="image/png" href="favicon.png")
 		link(rel="shortcut icon" type="image/png" href="favicon.png")
 		meta(name="viewport" content="width=device-width, initial-scale=1.0")
@@ -9,7 +9,7 @@ html
 		style
 			include ../public/css/site.css
 	body
-		div.content
+		div.content(v-bind:class="{ nightModeTheme: nightMode }")
 			//navbar
 			nav.collapse(id="navbar" v-on:click="toggleNav")
 				h1(id="navHeader") ChapApp | 
@@ -25,6 +25,8 @@ html
 						a Log In
 					li(v-on:click="signOut")
 						a Log Out
+					li(v-on:click="toggleMode")
+						a {{ nightMode ? 'Switch to Day Mode' : 'Switch to Night Mode'  }}
 				div.navCollapseToggleBtn
 					i.material-icons menu
 			//section 1 - HOME
@@ -67,7 +69,7 @@ html
 								polygon(class="st4" points="448.2,323.8 448.2,314.6 317.2,314.6 315.8,314.2 315.8,323.8 ")
 								path(class="st1" d="M171.1,346.6c-2.6,11.1-9.5,21.7-21.4,24.2c-2.7,0.6-5.5,0.7-8.3,0.7c-1.8,2.2-3.6,4.5-5.4,6.7 c-1.9,7.9-6.1,15.2-12.3,20.3c-5.7,4.8-12.3,7.3-19.8,5.2c-2.3-0.6-4.7-1.8-6.8-3.3c-2.1-0.8-4.2-1.9-6.2-3.5 c-1.7-1.3-3.1-2.8-4.2-4.5V272.9c8.6-2.2,17.6-2.4,26.7-1.2c11.6,1.6,23.9,4.3,32.1,13.4c1.4,1.5,2.5,3.2,3.5,4.9 c10.8,3.6,19.6,11.1,23.5,22.2C176.2,322.7,173.6,336,171.1,346.6z")
 								g
-									path(class="st7" d="M390.7,124c-30.9,0-56,25.1-56,56c0,0.2,0,0.4,0,0.7c0.1,4.1,1,8.2,2.5,12.1l53.4,136.1l45.3-115.6l8.9-23.3 c1.2-3.1,1.8-6.4,1.9-9.6c0-0.2,0-0.3,0-0.4C446.8,149.1,421.6,124,390.7,124z M390.7,211.8c-18.4,0-33.3-14.9-33.3-33.3 c0-18.3,14.9-33.3,33.3-33.3c18.3,0,33.3,14.9,33.3,33.3C424,196.8,409.1,211.8,390.7,211.8z")
+									path(class="st7" v-bind:class="{ nightModeTheme: nightMode }" d="M390.7,124c-30.9,0-56,25.1-56,56c0,0.2,0,0.4,0,0.7c0.1,4.1,1,8.2,2.5,12.1l53.4,136.1l45.3-115.6l8.9-23.3 c1.2-3.1,1.8-6.4,1.9-9.6c0-0.2,0-0.3,0-0.4C446.8,149.1,421.6,124,390.7,124z M390.7,211.8c-18.4,0-33.3-14.9-33.3-33.3 c0-18.3,14.9-33.3,33.3-33.3c18.3,0,33.3,14.9,33.3,33.3C424,196.8,409.1,211.8,390.7,211.8z")
 								
 							p View map
 						div.graphBtn
@@ -95,11 +97,11 @@ html
 								rect(x="188.5" y="245.2" class="st3" width="65" height="30")
 								rect(x="69.6" y="50.6" class="st4" width="126.6" height="37.8")
 							p Print report
-					div.addBtn
+					div.addBtn(v-bind:class="{ nightModeTheme: nightMode }") 
 						i.material-icons add
 				//display the rest of the section only if the user actually exists
 				template(v-if="user.name.length > 0")
-					div#section2Btn.btnBlue.submitBtn(v-on:click="scrollTo") Submit <br/> activity report
+					div#section2Btn.btnBlue.submitBtn(v-on:click="scrollTo" v-bind:class="{ nightModeTheme: nightMode }") Submit <br/> activity report
 					hr
 					div.message(v-for= "item in messages")
 						h4 {{item.date}}
@@ -110,10 +112,10 @@ html
 				div.flexParent
 					h2.textCenter Submit Activity Report
 					hr
-					div(v-for= "item in reportTypes" v-bind:class="item.class" v-bind:id="item.index" v-on:click="selectReport")
+					div(v-for= "item in reportTypes" v-bind:class="[item.class, nightMode ? 'nightModeTheme' : '']" v-bind:id="item.index" v-on:click="selectReport")
 						span(v-bind:id="item.index") {{item.title}}
 
-				div#card
+				div#card(v-bind:class="{ nightModeTheme: nightMode }")
 					i.material-icons.close(v-on:click="hideCard") close
 					div.step(@click="toggleSteps") {{currentStep.index + 1}}
 						div.stepchild( v-for="item in selectedReport.steps" v-on:click="chooseStep") {{item.index + 1}}
@@ -222,22 +224,22 @@ html
 								div.form.flexParent
 									div.inputGroup
 										h4 Did you work with a group today?
-										input#group(v-model="group" type="checkbox")
-									div.inputGroup(v-if="!group")
+										input#group(v-model="report.group" type="checkbox")
+									div.inputGroup(v-if="!report.group")
 										label Counseling for
 										select#counseling(v-model="report.counseling")
 											option Select
 											option Child
 											option Family
 											option Staff
-									div.inputGroup(v-if="!group")
+									div.inputGroup(v-if="!report.group")
 										label Gender
 										select#gender(v-model="report.gender")
 											option Select
 											option Female
 											option Male
 											option Other gender
-									div.inputGroup(v-if="!group")
+									div.inputGroup(v-if="!report.group")
 										label Ethnicity
 										select#ethnicity(v-model="report.ethnicity")
 											option Select
@@ -356,58 +358,70 @@ html
 								div.form.flexParent
 									div.inputGroup.required
 										label Event #
-										input#eventNo
+										input#eventNo(v-model="report.eventNum")
+									div.inputGroup.required
+										label Old Case #
+										input#caseNo(v-model="report.oldCaseNum")
 									div.inputGroup
-										label Case #
-										input#caseNo
+										label New Case #
+										input#caseNo(v-model="report.newCaseNum")
 									div.inputGroup.required
-										label Duty status
-										select#dutyStatus
-											option Select
-											option Follow-up
-											option Primary duty
-											option Self-initiated
-									div.inputGroup.required
-										label Agency assisted
-										select#agency
-											option Select
-											option American Ambulance
-											option Fresno Fire
-											option Fresno PD
-							
+										label Follow-up assistance
+										input(type="checkbox" v-model="report.followUp")
 									div.btn.btnBlue#page1Next(v-on:click="nextStep") Next
 							div.page#page2
 								div.form.flexParent
 									div.inputGroup.required
 										label Date
-										input#date(type="date")
-									div.inputGroup.required
-										label Time received
-										input#timeReceived(type="time")
+										input#date(type="date" v-model="report.date")
 									div.inputGroup.required
 										label Time arrived
-										input#timeArrived(type="time")
+										input#timeArrived(type="time" v-model="report.timeArrived")
 									div.inputGroup.required
 										label Time cleared
 										input#timeCleared(type="time" v-model="report.timeCleared")
 									div.btn.btnBlue#page2Next(v-on:click="nextStep") Next
 							div.page#page3
 								div.form.flexParent
+									
 									div.inputGroup
-										label Counseling for
-										select#counseling(v-model="report.counseling")
+										div.btn.btnGreen(@click="getLocation") LOCATE ME
+										p or enter the dispatched location:
+									div.inputGroup
+										input#address(v-model="report.address" placeholder="Street address")
+									div.inputGroup
+										input#zip(v-model="report.zip" placeholder="Zip code")
+									div.inputGroup
+										label Area served
+										select#area(v-model="report.area")
 											option Select
-											option Child
-											option Family
-											option Staff
-									div.inputGroup
+											option NE
+											option NW
+											option SE
+											option SW
+											option HQ
+											option Office
+								
+									div.btn.btnBlue#page3Next(v-on:click="nextStep") Next
+							div.page#page4
+								div.form.flexParent
+									div.inputGroup.required
+										label Name
+										input#name(v-model="report.contactName")
+									div.inputGroup.required
+										label Address (if different)
+										input#name(v-model="report.contactAddress")
+									div.inputGroup.required
+										label Phone number
+										input#phone(v-model="report.contactPhone", type="phone")
+									div.inputGroup.required
 										label Gender
 										select#gender(v-model="report.gender")
 											option Select
 											option Female
 											option Male
 											option Other gender
-									div.inputGroup
+									div.inputGroup.required
 										label Ethnicity
 										select#ethnicity(v-model="report.ethnicity")
 											option Select
@@ -417,90 +431,184 @@ html
 											option Asian / Pacific Islander
 											option Native American Indian
 											option Other
-									div.btn.btnBlue#page3Next(v-on:click="nextStep") Next
-							div.page#page4
-								div.form.flexParent
-									div.inputGroup.required
-										label Event classification code
-										select#eventCode(v-model="report.eventCode")
-											option Select
-											option No event issued
-											option 1A - Adults
-											option 1A - Juveniles
-											option 1E - Weapons
-											option 1H - Out of Control
-											option 1H - Curfew
-											option 1H - Truant
-											option 1J - At-risk Person
-											option 1J - Missing Adult
-											option 1J - Missing Juveline
-											option 1J - Runaway Juveline
-											option 1J - Found
-											option 1M - Suicide/Attempt
-											option 1M - Committed WIC 5150
-											option 1M - Sick or Injured / Check Welfare
-											option 1M - Mental Illness
-											option 1M - Overdose (Non-Narcotics Related)
-											option 1N - Suspicious Person
-											option 1N - Suspicious Vehicle
-											option 1N - Prowler Call
-											option 1N - Other Suspicious Circumstances
-											option 2B - Attend Public Meeting
-											option 2B - Security Inspection
-											option 2B - Patrol Watch/Building Check
-											option 4C - Forcible Rape
-											option 4C - Spousal Rape
-											option 4C - Sodomy
-											option 4C - Oral Copulation
-											option 4C - Sexual Battery/Molestation
-											option 4C - Indecent Exposure
-											option 4C - Unlawful Intercourse
-											option 4D - Aggravated Assault
-											option 4D - Simple Battery
-											option 4D - Domestic Violence
-											option 4D - Kidnap
-											option 4I - Selling Alcohol to Minors
-											option 4I - Selling Tobacco to Minors
-											option 4J - Bombing
-											option 4J - Attempt
-											option 4J - Threat
-											option 4J - Possession of Bomb Device
-											option 4J - Found Device
-											option 4K - Child Abuse/Neglect (at risk)
-											option 4K - Prior
-											option 4O - Child Custody
-											option 4O - Domestic Violence-Related
-											option 4O - Other
-											option 4Q - Child Concealment
-											option 4Q - Child Custody
-											option 4S - Possession
-											option 4S - Sales
-											option 4S - Possession for Sale
-											option 4S - Manufacturing/Growing
-									
+								
 									div.btn.btnBlue#page4Next(v-on:click="nextStep") Next
 							div.page#page5
 								div.form.flexParent
 									div.inputGroup
-										label Referral for
-										select#referral
+										label Community relations
+										select#communityRelations(v-model="report.communityRelations")
 											option Select
-											option Emotional Support
-											option Physical Support
+											option Assist a Citizen
+											option Disaster Assistance
+											option Food / Shelter / Utilities
+											option Transport a Citizen
+											option Community Event
+											option Translation
+											option Invocation / Prayer
+											option Visitation
+											option Theological / Religious Questions
 									div.inputGroup
-										label Referred to
-										select#referral
+										label Family counseling
+										select#familyCounseling(v-model="report.familyCounseling")
 											option Select
-											option Community Support
-											option Faith-Based Support
-											option County
-											option State
+											option Child Custody Dispute
+											option Divorce / Separation
+											option Marriage Counseling
+											option Personal Counseling
+											option Pre-marital Counseling
+									div.inputGroup
+										label Referral for
+										select#referralFor(v-model="report.referralFor")
+											option Select
+											option Emotional Needs
+											option Physical Needs
+											option Spiritual Needs
+									div.btn.btnBlue#page5Next(v-on:click="nextStep") Next
+							div.page#page6
+								div.form.flexParent
+									div.inputGroup
+										label Abuse Prevention &amp; Treatment
+										select#referralAbuse(v-model="report.referralAbuse")
+											option Select
+											option Child Protective Services: 559-255-8320
+											option Comprehensive Youth Services: 559-229-3561
+											option Crime Victim Assistance Center: 559-488-3425
+											optioi Marjaree Mason Center: 559-237-4706 559-233-4357 
+											option Northwest Family Center: 559-225-3222
+									div.inputGroup
+										label Addictions
+										select#referralAddictions(v-model="report.referralAddictions")
+											option Select
+											option Al-Anon Family Groups: 559-265-3560
+											option Alcoholics Anonymous: 559-221-6261
+											option Choices: A Road to Recovery: 559-229-3737: 
+											option Comprehensive Addictions Programs: 559-264-5096
+											option Decision Home of Fresno: 559-498-0381 (Male Only)
+											option Driving Abuse Treatment: 559-268-6475 (DUI Violators)
+											option Family and Youth Alternatives: 559-225-9117
+											option Fresno Rescue Mission: 559-268-0839
+											option Fresno New Connections: 559-248-1548
+											option Glorybound Ministries: 559-266-8812
+											option Highways and Hedges: 559-251-2080
+											option Narcotics Anonymous: 559-255-5881
+											option New Life for Girls: 559-486-2515
+											option Promesa Behavioral Health: 559-439-5437 (Children to 21)
+											option Salvation Army Rehabilitation: 559-490-7020
+											option Spirit of Woman of Calif.: 559-244-4353
+											option VA Central California: 559-225-6100 (Eligible Veterans)
+											option WestCare: 559-237-3420
+									div.inputGroup
+										label Advocacy
+										select#referralAdvocacy(v-model="report.referralAdvocacy")
+											option Select
+											option Central Calif. Legal Services: 559-570-1200
+											option Court Appointed Special Advocate: 559-244-6485 (Child Advocates)
+											option Crime Victim Assistance Center: 559-488-3425
+											option United Prison Ministries Coalition: 559-255-9492
+									div.inputGroup
+										label Child &amp; Family Services
+										select#referralFamily(v-model="report.referralFamily")
+											option Select
+											option Comprehensive Youth Services: 559-229-3561
+											option Early Head Start: 559-263-1550
+											option Northwest Family Center: 559-225-3222
+											option Rescue the Children: 559-268-0839
+											option Teen Parents Program: 559-237-4741
+									div.btn.btnBlue#page6Next(v-on:click="nextStep") Next 
+							div.page#page7
+								div.form.flexParent
+									div.inputGroup
+										label Clothing / Personal Items
+										select#referralClothing(v-model="report.referralClothing")
+											option Select
+											option Catholic Charities: 559-237-0851
+											option ESA Love, Inc.: 559-224-9599
+											option Poverllo House: 559-498-6988
+											option Samaritan Women Community: 559-227-2190 (women coming out of prison)
+											option 7th Day Adventist Comm. Ctr.: 559-221-4247
+									div.inputGroup
+										label Death and Dying
+										select#referralDeath(v-model="report.referralDeath")
+											option Select
+											option Fresno Survivors of Suicide Loss: 559-322-5877
+											option Hinds Hospice Ctr for Grief & Loss: 559-248-8579
+											option Life After Loss Support Group: 559-450-5600
+											option St. Agnes Grief Support: 559-450-3858
+									div.inputGroup
+										label Financial Assistance
+										select#referralFinancial(v-model="report.referralFinancial")
+											option Select
+											option CALWORKS: 559-453-4357
+											option Catholic Charities: 559-237-0851
+											option ESA Love, Inc.: 559-224-9599
+											option Fresno County E.O.C.: 559-263-1135
+											option Salvation Army: 559-233-0138
+											option Economic Opportunity Comm.: 559-263-113
+									div.inputGroup
+										label Food
+										select#referralFood(v-model="report.referralFood")
+											option Select
+											option Catholic Charities: 559-237-0851
+											option Community Food Bank: 559-237-3663
+											option Glorybound Ministries: 559-266-8812
+											option Poverello House: : 559-498-6988
+											option Senior Hot Meals: 559-621-6600
+											option 7th Day Adventist Comm. Ctr.: 559-221-4247
+
+
+									div.btn.btnBlue#page7Next(v-on:click="nextStep") Next 
+							div.page#page8
+								div.form.flexParent
+									div.inputGroup
+										label Hotlines
+										select#referralHotlines(v-model="report.referralHotlines")
+											option Select
+											option Adult Protective Services: 559-255-3383
+											option Alcoholics Anonymous: 559-221-6907
+											option Calif. Poison Control: 800-222-1222
+											option Child Protective Services: 559-255-8320
+											option Marjaree Mason Center: 559-237-4706
+											option National Runaway Switchboard: 773-880-9860
+									div.inputGroup
+										label Information & Referral
+										select#referralInformation(v-model="report.referralInformation")
+											option Select
+											option Adult Protective Services: 559-255-3383
+											option American Red Cross: 559-455-1000
+											option Attorney Information & Referral: 559-264-0137
+											option Central California Legal Services: 559-570-1200
+											option Central Valley Children’s Services: 559-456-1100
+											option ESA Love, Inc.: 559-224-9599
+											option Fresno Metro Ministry: 559-485-1416
+											option Marjaree Mason Center: 559-237-4706
+											option St Agnes Health Source Connection: 559-450-2000
+									div.inputGroup
+										label Legal/Mediation
+										select#referralLegal(v-model="report.referralLegal")
+											option Select
+											option Family Court Services: 559-488-3241
+											option Centro La Familia Advocacy: 559-237-2961 (Catholic Charities)
+											option Crime Victim Assistance Ctr.: 559-488-3425 (Catholic Charities)
+											option Fresno County Public Defender: 559-488-3546
+											option Victim Offender Reconciliation: 559-445-9803
+									div.inputGroup
+										label Mental Health
+										select#referralMental(v-model="report.referralMental")
+											option Select
+											option Adult Services Dept. Metro Services: 559-453-4099
+											option Community Behavioral Health Ctr: 559-449-8000
+											option Family & Youth Alternatives: 559-225-9117
+											option Link Care Counseling Center: 559-439-2647
+											option National Alliance For Mentally Ill: 559-224-2469 (NAMI)
+									div.btn.btnBlue#page8Next(v-on:click="nextStep") Next 
+							div.page#page9
+								div.form.flexParent
 									div.inputGroup.required
 										label Synopsis
-										textarea#synopsis
-											
-									div.btn.btnBlue#page5Next(v-on:click="submitForm") Submit
-							div.page#page6
+										textarea#synopsis(v-model="report.synopsis")
+									div.btn.btnBlue#page9Next(v-on:click="submitForm") Submit 
+							div.page#page10
 								div.form.flexParent
 									h2 {{submitAlert}}
 						div(v-if="selectedReport.index === 2")

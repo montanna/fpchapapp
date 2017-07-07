@@ -13,13 +13,14 @@
 
 /*it*/
 
-$badass: #bada55;
 $red: #f97b7b;
 $purple: desaturate(#9B51E0, 20%);
 $green: desaturate(#17c666, 20%);
-$medBlue: #26B2DD;
+//$medBlue: #26B2DD;
+$medBlue: #30abe8;
 $ltGray: rgba(0, 0, 0, 0.15);
 $medGray: #777777;
+$dkGray: #262626;
 //for gradient
 $start: $green;
 $end: #e0e0e0;
@@ -29,10 +30,55 @@ $bkg: #fff;
 /*Global styles*/
 
 body {
-    font-family: 'Open Sans', 'Calibri Light', Verdana;
+    font-family: 'Lato', 'Calibri Light', Verdana;
     color: $medGray;
     margin: 0;
     overflow-x: hidden;
+    background: #fafafa;
+    transition: background 0.2s ease-in-out;
+}
+
+.nightModeTheme {
+    background: $dkGray;
+    color: #d6d6d6;
+    & > nav {
+        background: desaturate(darken($medBlue, 10%), 10%);
+        border-color: darken($medBlue, 10%);
+    }
+    &.btnBlue {
+        background: desaturate(darken($medBlue, 10%), 10%);
+    }
+    &.btnRed {
+        background: desaturate(darken($red, 20%), 25%);
+    }
+    &.addBtn,
+    &.st7 {
+        background: desaturate(darken($red, 20%), 25%);
+        fill: desaturate(darken($red, 20%), 20%)!important;
+    }
+    &.btnPurple {
+        background: darken($purple, 20%);
+    }
+    &#card {
+        background: $dkGray;
+        & > .step {
+            background: darken($medBlue, 10%);
+        }
+        & > .progressBar {
+            background: #4b4b4b;
+        }
+        & > div > div > div > div > div > input,
+        & > div > div > div > div > div > select,
+        & > div > div > div > div > div > textarea {
+            background: #4b4b4b;
+        }
+        & > div > div > div > div > .btnBlue {
+            background: darken($medBlue, 10%);
+        }
+        & > div > div > div > div > .danger {
+            color: desaturate(darken($red, 10%), 15%)!important;
+        }
+    }
 }
 
 h1,
@@ -45,7 +91,7 @@ h3 {
 hr {
     margin: 20px;
     border: transparent;
-    border-bottom: 0.1px solid $ltGray;
+    border-bottom: 0.5px solid rgba(138, 138, 138, 0.32);
 }
 
 small {
@@ -60,7 +106,7 @@ textarea {
     padding: 5px;
     margin: 5px;
     color: $medGray;
-    font-family: 'Open Sans';
+    font-family: 'Lato';
     width: calc(100% - 15px);
 }
 
@@ -76,13 +122,10 @@ input:focus {
 }
 
 .danger {
-    background: lighten($red, $amt * 3.5)!important;
     color: $red!important;
 }
 
 .success {
-    border: 2px solid $green!important;
-    background: lighten($green, $amt * 4)!important;
     color: $green!important;
 }
 
@@ -114,9 +157,8 @@ input:focus {
     padding: 10px;
     margin: 10px;
     color: #fff;
-    font-family: 'Open Sans';
+    font-family: 'Lato';
     font-weight: 400;
-    font-size: 18px;
     text-align: center;
     text-transform: uppercase;
     transition: 0.3s all ease;
@@ -128,7 +170,6 @@ input:focus {
 .btnBlue {
     @extend .btn;
     background-color: $medBlue;
-    box-shadow: 0px 6px 0px darken($medBlue, $amt);
     &:hover {
         background-color: darken($medBlue, $amt);
     }
@@ -137,7 +178,6 @@ input:focus {
 .btnGreen {
     @extend .btn;
     background-color: $green;
-    box-shadow: 0px 6px 0px darken($green, $amt);
     &:hover {
         background-color: darken($green, $amt);
     }
@@ -146,7 +186,6 @@ input:focus {
 .btnRed {
     @extend .btn;
     background-color: $red;
-    box-shadow: 0px 6px 0px darken($red, $amt);
     &:hover {
         background-color: darken($red, $amt);
     }
@@ -155,7 +194,6 @@ input:focus {
 .btnPurple {
     @extend .btn;
     background-color: $purple;
-    box-shadow: 0px 6px 0px darken($purple, $amt);
     &:hover {
         background-color: darken($purple, $amt);
     }
@@ -236,8 +274,10 @@ nav {
     margin: 10px;
     max-width: 90%;
     font-size: 1.2em;
+    max-height: 30px;
+    overflow: hidden;
     & > span {
-        font-family: 'Open Sans';
+        font-family: 'Lato';
         font-weight: 200;
     }
 }
@@ -286,6 +326,8 @@ nav {
     text-align: center;
     flex: 0.1 1 auto !important;
     margin: 4px;
+    border-radius: 6px;
+    background: rgba($medBlue, 0.15);
     & > svg {
         width: 25vw;
         height: 25vw;
@@ -299,17 +341,17 @@ nav {
 
 svg {
     pointer-events: none;
+    filter: drop-shadow(1px 1px 2px rgba(0, 0, 0, 0.2));
 }
 
 .submitBtn {
     max-width: 80%;
     margin: 0 auto;
     margin-top: 20px;
-    font-size: 18px;
 }
 
 .message {
-    background: lighten($ltGray, $amt);
+    background: rgba($medBlue, 0.15);
     width: 80%;
     margin: 0 auto;
     padding: 5px;
@@ -338,7 +380,7 @@ svg {
             &::after {
                 opacity: 100;
                 content: "Add a new message";
-                font-family: "Open sans";
+                font-family: "Lato";
             }
         }
     }
@@ -370,11 +412,13 @@ svg {
         flex-direction: column;
         & > .btn {
             width: 80%;
-            height: 10vh;
-            line-height: 10vh;
+            min-height: 50px;
             margin: 0 auto;
             margin-top: 20px;
             padding: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
     }
 }
@@ -585,7 +629,7 @@ svg {
         fill: #c2c2c2;
     }
     .st6 {
-        fill: #BDBDBD;
+        fill: #e5e5e5;
     }
     .st7 {
         fill: $red;
