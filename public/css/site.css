@@ -59,10 +59,15 @@ textarea {
   border-radius: 6px;
   border: 1px solid rgba(0, 0, 0, 0.15);
   padding: 5px;
-  margin: 5px;
+  margin: 5px 0px;
   color: #777777;
   font-family: 'Lato';
   width: calc(100% - 15px); }
+
+select {
+  /* padding doesn't affect input and select objects the same way,    */
+  /* so 5px padding makes an input 10px wider. this accounts for that */
+  width: calc(100% - 5px); }
 
 textarea {
   height: 20vh; }
@@ -319,7 +324,7 @@ svg {
   height: 30px;
   text-align: center;
   line-height: 30px;
-  margin: 20px;
+  margin: 20px -5px;
   z-index: 9;
   position: absolute; }
 
@@ -383,8 +388,7 @@ svg {
         flex-direction: column;
         padding: 15px; }
         .pages > div > .page > .form > .btn, .pages > div > .page > .form > .btnBlue, .pages > div > .page > .form > .btnGreen, .pages > div > .page > .form > .btnRed, .pages > div > .page > .form > .btnPurple {
-          width: calc(100% - 15px);
-          margin: 30px 0; }
+          margin: 10px 0; }
         .pages > div > .page > .form > .inputGroup > label,
         .pages > div > .page > .form > .inputGroup > input,
         .pages > div > .page > .form > .inputGroup > select {

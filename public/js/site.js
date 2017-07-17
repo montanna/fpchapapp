@@ -132,7 +132,9 @@
          report: {
              group: false,
              address: "",
-             zip: ""
+             zip: "",
+             reason: "",
+             referredFor: ""
          },
          messages: [
              { date: "4/13/2017" },
@@ -140,11 +142,17 @@
          ],
          reportTypes: [
              { index: 0, class: "btnPurple", title: "RISE Report", steps: [{ index: 0, title: "Basic info", progress: "p10" }, { index: 1, title: "Time & date", progress: "p20" }, { index: 2, title: "Demographics", progress: "p40" }, { index: 3, title: "Location", progress: "p60" }, { index: 4, title: "Event info", progress: "p80" }, { index: 5, title: "Conclusion", progress: "p90" }, { index: 6, title: "Submit", progress: "p100" }] },
-             { index: 1, class: "btnRed", title: "Domestic Disturbance Report", steps: [{ index: 0, title: "Basic info", progress: "p10" }, { index: 1, title: "Time & date", progress: "p20" }, { index: 2, title: "Location", progress: "p30" }, { index: 3, title: "Primary contact", progress: "p40" }, { index: 4, title: "Event info", progress: "p50" }, { index: 5, title: "Referred to", progress: "p60" }, { index: 6, title: "Referred to (continued)", progress: "p70" }, { index: 7, title: "Referred to (continued)", progress: "p80" }, { index: 8, title: "Conclusion", progress: "p90" }, { index: 9, title: "Submit", progress: "p100" }] },
-             { index: 2, class: "btnBlue", title: "Patrol Activity Report", steps: [{ index: 0, title: "Basic info", progress: "p10" }, { index: 1, title: "Time & date", progress: "p20" }, { index: 2, title: "Demographics", progress: "p40" }, { index: 3, title: "Location", progress: "p60" }, { index: 4, title: "Event info", progress: "p80" }, { index: 5, title: "Conclusion", progress: "p90" }, { index: 6, title: "Submit", progress: "p100" }] }
+             { index: 1, class: "btnRed", title: "Domestic Disturbance Report", steps: [{ index: 0, title: "Basic info", progress: "p10" }, { index: 1, title: "Time & date", progress: "p30" }, { index: 2, title: "Location", progress: "p50" }, { index: 3, title: "Primary contact", progress: "p70" }, { index: 4, title: "Referral", progress: "p80" }, { index: 5, title: "Conclusion", progress: "p90" }, { index: 6, title: "Submit", progress: "p100" }] },
+             { index: 2, class: "btnBlue", title: "Patrol Activity Report", steps: [{ index: 0, title: "Basic info", progress: "p10" }, { index: 1, title: "Time & date", progress: "p20" }, { index: 2, title: "Event info", progress: "p40" }, { index: 3, title: "Location", progress: "p60" }, { index: 4, title: "Primary contact", progress: "p80" }, { index: 5, title: "Conclusion", progress: "p90" }, { index: 6, title: "Submit", progress: "p100" }] }
          ],
 
          selectedReport: {}
+     },
+     computed: {
+        selectedSteps(){
+            var steps = this.selectedReport.steps;
+            if(steps) return steps.slice(0,steps.length - 1);
+        }
      },
 
      methods: {
@@ -301,7 +309,7 @@
              var done = true;
              for (var i = 0; i < req.length; i++) {
                  if (!req[i].children[1].value || req[i].children[1].value.length == 0) {
-                     req[i].classList += " danger";
+                     req[i].classList.add("danger");
                      done = false;
                  }
              }
@@ -383,10 +391,24 @@
                  vm.nightMode = false;
              else
                  vm.nightMode = true;
+         },
+         closeReport: function(){
+            vm.hideCard();
+            vm.report = {
+                group: false,
+                address: "",
+                zip: "",
+                reason: "",
+                referredFor: ""
+            }
+            var req = document.getElementsByClassName("danger");
+            while(req.length != 0){
+                req = document.getElementsByClassName("danger");
+                for(var i = 0; i < req.length; i++){
+                    req[i].classList.remove("danger");
+                }
+            }
          }
-
-
-
      }
  })
 
