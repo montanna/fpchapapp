@@ -138,12 +138,13 @@ input:focus {
   height: 100vh;
   max-width: 100%;
   position: fixed;
-  top: 0;
   left: 0;
   background: rgba(10, 10, 10, 0.8);
   display: none;
   background: #fff;
-  text-align: center; }
+  text-align: center;
+  top: 50px;
+  z-index: 9; }
   .modal > .login > p {
     padding: 5px;
     border-radius: 6px; }
@@ -506,5 +507,35 @@ svg {
     transform: rotate(0deg); }
   100% {
     transform: rotate(360deg); } }
+
+/*Media query for most laptop screens*/
+@media screen and (min-width: 800px) {
+  /*Make the navbar look like a desktop navbar instead of a mobile one*/
+  nav.collapse {
+    cursor: default; }
+    nav.collapse > #navHeader {
+      display: inline;
+      height: 50px; }
+    nav.collapse > ul {
+      margin: 0;
+      display: inline-block;
+      height: 50px; }
+      nav.collapse > ul > li {
+        display: inline-block; }
+    nav.collapse > .navCollapseToggleBtn {
+      display: none; }
+  /*Fix the login modal because it looks stupid at 100vw on desktop*/
+  .login {
+    width: 50vw;
+    max-width: 300px;
+    margin: 0 auto; }
+  .section {
+    width: 60vw;
+    max-width: 800px;
+    margin: 0 auto; }
+  /*Fix the icons on the home page*/
+  .mapBtn > svg, .graphBtn > svg, .reportBtn > svg {
+    width: 15vh;
+    height: 15vh; } }
 
 /*# sourceMappingURL=site.css.map */

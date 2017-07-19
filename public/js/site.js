@@ -159,10 +159,12 @@
          toggleNav: function() {
              //toggles the collapsed state of the navbar
              var nav = document.getElementById("navbar");
-             if (nav.classList.contains("collapse")) {
-                 nav.className = "";
-             } else
-                 nav.className = "collapse";
+             if (document.width >= 800) {
+                 if (nav.classList.contains("collapse")) {
+                                  nav.className = "";
+                              } else
+                                  nav.className = "collapse";
+             }
          },
          signIn: function() {
              //sign in with firebase
@@ -412,6 +414,7 @@
      }
  })
 
+
  //Watch scroll position
  document.onscroll = function() {
      var pos = document.body.scrollTop;
@@ -430,4 +433,10 @@
      setTimeout(function() {
          ss.style.display = "none";
      }, 300);
+     //event binding for enter key in password field
+     document.getElementById("pass").onkeydown = function (e) {
+        e = e || window.event;
+        if(e.keyCode == 13) //the enter key was pressed - 13 is its code
+            vm.signIn();
+    }
  }
