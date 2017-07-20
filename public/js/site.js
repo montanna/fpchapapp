@@ -30,14 +30,23 @@
  }
 
 
- function geocodeAddress(geocoder, resultsMap) {
-     var address = "700 Van Ness Ave Fresno CA"
+ function geocodeAddress(geocoder, resultsMap, address, type) {
      geocoder.geocode({ 'address': address }, function(results, status) {
          if (status === 'OK') {
              resultsMap.setCenter(results[0].geometry.location);
+             var color;
+             if(type === "RISE Report") 
+                color = "BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_VIOLET)";
+            else if(type === "Patrol Activity Report")
+                color = "BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)";
+            else if (type === "Domestic Disturbance Report")
+                color = "BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED)";
+            else
+                color = "BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW)";
              var marker = new google.maps.Marker({
                  map: resultsMap,
-                 position: results[0].geometry.location
+                 position: results[0].geometry.location,
+                 color: color
              });
          } else {
              alert('Geocode was not successful for the following reason: ' + status);
@@ -74,7 +83,19 @@
      });
  }
 
-
+//Get map markers from firebase
+function loadMarkers(){
+    var ref = firebase.database().ref("reports");
+    var reports = [];
+    ref.once('value', function(snapshot) {
+        //This loops over every child of the reports node.
+        snapshot.forEach(function(childSnapshot) {
+            var childKey = childSnapshot.key;
+            var childData = childSnapshot.val();
+            geocodeAddress(geocoder, map, childData.address);
+        });
+    });
+}
 
 
  //Initialize the Vue vm
@@ -102,15 +123,19 @@
              }
              //set user data in the viewmodel
              vm.user.uid = user.uid;
+             vm.report.user = user.uid;
              vm.user.name = user.displayName;
 
-             //get list of users with admin role to see if the current user is one
+             //get current user from fbase and check role
+             //do things accordingly
              var ref = firebase.database().ref("users/" + user.uid);
              var role;
              ref.on('value', function(snapshot) {
                  role = snapshot.val().role;
                  if (role === "admin") {
                      vm.user.role = "admin";
+                     //do admin things
+                     loadMarkers();
                  } else
                      vm.user.role = "user";
              });
@@ -306,7 +331,7 @@
          },
          submitForm: function() {
              vm.nextStep();
-             var ref = firebase.database().ref("users/" + vm.user.uid + "/reports");
+             var ref = firebase.database().ref("/reports");
              var req = document.getElementsByClassName("required");
              var done = true;
              for (var i = 0; i < req.length; i++) {
@@ -323,6 +348,7 @@
          selectReport: function() {
              var index = event.target.id;
              vm.selectedReport = vm.reportTypes[index];
+             vm.report.type = vm.selectedReport.title;
              vm.showCard();
          },
 
