@@ -9,7 +9,7 @@ app.set('views', "./views");
 app.set('view engine', 'pug');
 
 //TODO: remove before production!
-app.set('view cache', false);
+//app.set('view cache', false);
 
 app.get('/', function(request, response) {
     response.render('index');
