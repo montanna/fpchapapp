@@ -1,25 +1,25 @@
 {
-    "name": "fpchapapp",
-    "version": "1.0.0",
-    "main": "index.js",
-    "dependencies": {
-        "express": "^4.15.2",
-        "node-sass": "^4.5.3",
-        "npm-run-all": "^4.0.2",
-        "pug": "^2.0.0-beta11",
-        "vue": "^2.2.6"
-    },
-    "devDependencies": {},
-    "scripts": {
-        "build-css": "node-sass --recursive --output public/css --source-map true --source-map-contents public/sass ",
-        "start": "app.js"
-    },
-    "repository": {
-        "type": "git",
-
-        "url": "git+https://github.com/montanna/fpchapapp/"
-    },
-    "author": "montanna",
-    "license": "ISC",
-    "description": ""
+  "name": "fpchapapp",
+  "version": "1.0.0",
+  "main": "index.js",
+  "dependencies": {
+    "chart.js": "^2.6.0",
+    "express": "^4.15.2",
+    "node-sass": "^4.5.3",
+    "npm-run-all": "^4.0.2",
+    "pug": "^2.0.0-beta11",
+    "vue": "^2.2.6"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "build-css": "node-sass --recursive --output public/css --source-map true --source-map-contents public/sass ",
+    "start": "app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/montanna/fpchapapp/"
+  },
+  "author": "montanna",
+  "license": "ISC",
+  "description": ""
 }

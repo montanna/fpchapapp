@@ -12,6 +12,25 @@
  };
  firebase.initializeApp(config);
 
+ //Get report counts for chart
+ var ddCount = 0;
+ var paCount = 0;
+ var riseCount = 0;
+ var reportsRef = firebase.database().ref("/reports/");
+ reportsRef.on('value', function(snapshot) {
+     //This loops over every child of the reports node.
+     snapshot.forEach(function(childSnapshot) {
+         var childData = childSnapshot.val();
+         var type = childData.type;
+         if (type == "RISE Report")
+             riseCount += 1;
+         else if (type == "Patrol Activity Report")
+             paCount += 1;
+         else if (type == "Domestic Disturbance Report")
+             ddCount += 1;
+         else console.log("Error: report type not found.")
+     });
+ });
 
  //Initialize Google Map plugin
  var map;
@@ -29,25 +48,43 @@
 
  }
 
+ function attachInfo(marker, msg) {
+     var infowindow = new google.maps.InfoWindow({
+         content: msg
+     });
+     marker.addListener("click", function() {
+         infowindow.open(marker.get('resultsMap'), marker);
+     })
+ }
 
- function geocodeAddress(geocoder, resultsMap, address, type) {
+
+ function geocodeAddress(geocoder, resultsMap, address, type, data) {
      geocoder.geocode({ 'address': address }, function(results, status) {
          if (status === 'OK') {
              resultsMap.setCenter(results[0].geometry.location);
-             var color;
-             if(type === "RISE Report") 
-                color = "BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_VIOLET)";
-            else if(type === "Patrol Activity Report")
-                color = "BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)";
-            else if (type === "Domestic Disturbance Report")
-                color = "BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED)";
-            else
-                color = "BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW)";
+             var color = "yellow";
+             if (type === "RISE Report")
+                 color = "darkviolet";
+             else if (type === "Patrol Activity Report")
+                 color = "deepskyblue";
+             else if (type === "Domestic Disturbance Report")
+                 color = "crimson";
+             var customIcon = {
+                 path: "M59.54,0A59.55,59.55,0,0,0,0,59.54c0,.22,0,.48,0,.77A39.93,39.93,0,0,0,2.79,73.6l7.76,19.79L59.43,218,108,94.12l8.92-23.29A31.84,31.84,0,0,0,119.08,60c0-.16,0-.31,0-.44A59.55,59.55,0,0,0,59.54,0Zm0,87.79A29.77,29.77,0,1,1,89.31,58,29.77,29.77,0,0,1,59.54,87.79Z",
+                 fillColor: color,
+                 fillOpacity: 0.8,
+                 scale: 0.2,
+                 strokeColor: "white",
+                 strokeWeight: 3,
+                 strokeOpacity: 0.5,
+             }
              var marker = new google.maps.Marker({
                  map: resultsMap,
                  position: results[0].geometry.location,
-                 color: color
+                 icon: customIcon
              });
+             attachInfo(marker, address + "<br/>" + data.date)
+
          } else {
              alert('Geocode was not successful for the following reason: ' + status);
          }
@@ -83,19 +120,19 @@
      });
  }
 
-//Get map markers from firebase
-function loadMarkers(){
-    var ref = firebase.database().ref("reports");
-    var reports = [];
-    ref.once('value', function(snapshot) {
-        //This loops over every child of the reports node.
-        snapshot.forEach(function(childSnapshot) {
-            var childKey = childSnapshot.key;
-            var childData = childSnapshot.val();
-            geocodeAddress(geocoder, map, childData.address);
-        });
-    });
-}
+ //Get map markers from firebase
+ function loadMarkers() {
+     var ref = firebase.database().ref("reports");
+     var reports = [];
+     ref.once('value', function(snapshot) {
+         //This loops over every child of the reports node.
+         snapshot.forEach(function(childSnapshot) {
+             var childKey = childSnapshot.key;
+             var childData = childSnapshot.val();
+             geocodeAddress(geocoder, map, childData.address, childData.type, childData);
+         });
+     });
+ }
 
 
  //Initialize the Vue vm
@@ -109,36 +146,39 @@ function loadMarkers(){
              if (!user) {
                  vm.user.role = "";
                  return;
-             }
-             //Communicate via the interface that login was successful
-             var dang = document.getElementsByClassName("danger");
-             var passInput = document.getElementById("pass");
-             var pWarning = document.getElementById("warning");
-             pWarning.classList.add("success");
-             vm.warning = "Success! You are now logged in.";
-             //remove danger style from elements so as not to confuse the user
-             for (var i = 0; i < dang.length; i++) {
-                 dang[i].classList.remove("danger");
+             } else if (firebase.auth().currentUser) {
 
-             }
-             //set user data in the viewmodel
-             vm.user.uid = user.uid;
-             vm.report.user = user.uid;
-             vm.user.name = user.displayName;
+                 //Communicate via the interface that login was successful
+                 var dang = document.getElementsByClassName("danger");
+                 var passInput = document.getElementById("pass");
+                 var pWarning = document.getElementById("warning");
+                 pWarning.classList.add("success");
+                 vm.warning = "Success! You are now logged in.";
+                 //remove danger style from elements so as not to confuse the user
+                 for (var i = 0; i < dang.length; i++) {
+                     dang[i].classList.remove("danger");
 
-             //get current user from fbase and check role
-             //do things accordingly
-             var ref = firebase.database().ref("users/" + user.uid);
-             var role;
-             ref.on('value', function(snapshot) {
-                 role = snapshot.val().role;
-                 if (role === "admin") {
-                     vm.user.role = "admin";
-                     //do admin things
-                     loadMarkers();
-                 } else
-                     vm.user.role = "user";
-             });
+                 }
+
+                 //set user data in the viewmodel
+                 vm.user.uid = user.uid;
+                 vm.report.user = user.uid;
+                 if (user.displayName) vm.user.name = user.displayName;
+
+                 //get current user from fbase and check role
+                 //do things accordingly
+                 var ref = firebase.database().ref("users/" + user.uid);
+                 var role;
+                 ref.on('value', function(snapshot) {
+                     if (snapshot.val()) role = snapshot.val().role;
+                     if (role === "admin") {
+                         vm.user.role = "admin";
+                         //do admin things
+                         loadMarkers();
+                     } else
+                         vm.user.role = "user";
+                 });
+             }
 
          });
 
@@ -148,6 +188,8 @@ function loadMarkers(){
          user: { name: "", uid: "", role: "" },
          email: "",
          pass: "",
+         signUp: false,
+         signedIn: false,
          warning: "",
          nightMode: false,
          stepsVisible: false,
@@ -158,12 +200,10 @@ function loadMarkers(){
              group: false,
              address: "",
              zip: "",
-             reason: "",
-             referredFor: ""
+             reason: ""
          },
          messages: [
-             { date: "4/13/2017" },
-             { date: "4/11/2017" },
+             { date: "8/3/2017", message: "Welcome to ChapApp! Use the button above to get started on your first activity report." },
          ],
          reportTypes: [
              { index: 0, class: "btnPurple", title: "RISE Report", steps: [{ index: 0, title: "Basic info", progress: "p10" }, { index: 1, title: "Time & date", progress: "p20" }, { index: 2, title: "Demographics", progress: "p40" }, { index: 3, title: "Location", progress: "p60" }, { index: 4, title: "Event info", progress: "p80" }, { index: 5, title: "Conclusion", progress: "p90" }, { index: 6, title: "Submit", progress: "p100" }] },
@@ -174,10 +214,10 @@ function loadMarkers(){
          selectedReport: {}
      },
      computed: {
-        selectedSteps(){
-            var steps = this.selectedReport.steps;
-            if(steps) return steps.slice(0,steps.length - 1);
-        }
+         selectedSteps() {
+             var steps = this.selectedReport.steps;
+             if (steps) return steps.slice(0, steps.length - 1);
+         }
      },
 
      methods: {
@@ -186,21 +226,26 @@ function loadMarkers(){
              var nav = document.getElementById("navbar");
              if (document.width >= 800) {
                  if (nav.classList.contains("collapse")) {
-                                  nav.className = "";
-                              } else
-                                  nav.className = "collapse";
+                     nav.className = "";
+                 } else
+                     nav.className = "collapse";
              }
          },
          signIn: function() {
              //sign in with firebase
-             firebase.auth().signInWithEmailAndPassword(vm.email, vm.pass)
-                 .catch(function(error) {
-                     // Handle Errors here.
+             firebase.auth().signInWithEmailAndPassword(vm.email, vm.pass).then(function(){
+                //No errors occurred!
+                 vm.signedIn = true;
+
+             }).catch(function(error) {
+                 // Handle Errors here.
+                 if (error) {
+                     errorHappened = true;
                      var errorCode = error.code;
                      var errorMessage = error.message;
-                     if (errorCode === 'auth/wrong-password') {
-                         var passInput = document.getElementById("pass");
-                         var pWarning = document.getElementById("warning");
+                     var passInput = document.getElementById("pass");
+                     var pWarning = document.getElementById("warning");
+                     if (errorCode === 'auth/wrong-password' && passInput) {
                          passInput.classList.add("danger");
                          passInput.classList.add("weakPass");
                          pWarning.classList.remove("success");
@@ -208,30 +253,44 @@ function loadMarkers(){
                          vm.pass = "";
                          vm.warning = "Email or password is incorrect.";
                      } else {
-                         alert(errorMessage);
+                         vm.warning = errorMessage;
                      }
-                 });
-         },
-         signUp: function() {
-             //create a new user in firebase
-             firebase.auth().createUserWithEmailAndPassword(vm.email, vm.pass).catch(function(error) {
-                 // Handle Errors here.
-                 var errorCode = error.code;
-                 var errorMessage = error.message;
-                 console.log(error);
-                 if (errorCode === 'auth/weak-password') {
-                     var passInput = document.getElementById("pass");
-                     var pWarning = document.getElementById("warning");
-                     passInput.classList.add("danger");
-                     passInput.classList.add("weakPass");
-                     pWarning.classList.remove("success");
-                     pWarning.classList.add("danger");
-                     vm.pass = "";
-                     vm.warning = "That password is incorrect.";
                  }
              });
          },
+
+         signUpUser: function() {
+             //create a new user in firebase
+
+             firebase.auth().createUserWithEmailAndPassword(vm.email, vm.pass).then(function(){
+                //Signup was successful! add a display name for this user:
+                firebase.auth().currentUser.updateProfile({displayName: vm.user.name});
+
+             }).catch(function(error) {
+                 //Something went wrong in the signup process, so show the user an error message.
+                 if (error) {
+                     errorHappened = true;
+                     var errorCode = error.code;
+                     var errorMessage = error.message;
+                     //UI alert if the error can be solved by the user
+                     var passInput = document.getElementById("pass");
+                     var pWarning = document.getElementById("warning");
+                         passInput.classList.add("danger");
+                         pWarning.classList.remove("success");
+                         pWarning.classList.add("danger");
+                     if (errorCode === 'auth/weak-password') {
+                         passInput.classList.add("weakPass");
+                         vm.pass = "";
+                         vm.warning = "That password is not strong enough. Try to create a password with more than six characters that contains both letters and numbers.";
+                     } else {
+                         vm.warning = error.message;
+                     }
+                 }
+             });
+
+         },
          signOut: function() {
+             vm.signedIn = false;
              firebase.auth().signOut();
              //clear the user name and role so that the interface doesn't show anything to a nonuser
              vm.user.name = "";
@@ -420,22 +479,22 @@ function loadMarkers(){
              else
                  vm.nightMode = true;
          },
-         closeReport: function(){
-            vm.hideCard();
-            vm.report = {
-                group: false,
-                address: "",
-                zip: "",
-                reason: "",
-                referredFor: ""
-            }
-            var req = document.getElementsByClassName("danger");
-            while(req.length != 0){
-                req = document.getElementsByClassName("danger");
-                for(var i = 0; i < req.length; i++){
-                    req[i].classList.remove("danger");
-                }
-            }
+         closeReport: function() {
+             vm.hideCard();
+             vm.report = {
+                 group: false,
+                 address: "",
+                 zip: "",
+                 reason: "",
+                 referredFor: ""
+             }
+             var req = document.getElementsByClassName("danger");
+             while (req.length != 0) {
+                 req = document.getElementsByClassName("danger");
+                 for (var i = 0; i < req.length; i++) {
+                     req[i].classList.remove("danger");
+                 }
+             }
          }
      }
  })
@@ -460,9 +519,43 @@ function loadMarkers(){
          ss.style.display = "none";
      }, 300);
      //event binding for enter key in password field
-     document.getElementById("pass").onkeydown = function (e) {
-        e = e || window.event;
-        if(e.keyCode == 13) //the enter key was pressed - 13 is its code
-            vm.signIn();
-    }
+     document.getElementById("pass").onkeydown = function(e) {
+         e = e || window.event;
+         if (e.keyCode == 13) //the enter key was pressed - 13 is its code
+             vm.signIn();
+     }
+
+     //Initialize chart
+     var ctx = document.getElementById("myChart");
+     var myChart = new Chart(ctx, {
+         type: 'bar',
+         data: {
+             labels: ["Domestic Disturbance Reports", "Patrol Activity Reports", "RISE Reports"],
+             datasets: [{
+                 label: '# of Reports',
+                 data: [ddCount, paCount, riseCount],
+                 backgroundColor: [
+                     'rgba(255, 99, 132, 0.3)',
+                     'rgba(54, 162, 235, 0.3)',
+                     'rgba(153, 102, 255, 0.3)',
+                 ],
+                 borderColor: [
+                     'rgba(255,99,132,1)',
+                     'rgba(54, 162, 235, 1)',
+                     'rgba(153, 102, 255, 1)',
+                 ],
+                 borderWidth: 2
+             }]
+         },
+         options: {
+             scales: {
+                 yAxes: [{
+                     ticks: {
+                         beginAtZero: true,
+                         stepSize: 1
+                     }
+                 }]
+             }
+         }
+     });
  }

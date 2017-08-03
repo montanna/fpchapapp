@@ -339,7 +339,9 @@ svg {
 
 .progressBar {
   background: #e0e0e0;
-  height: 5px; }
+  height: 5px;
+  width: calc(100% - 20px);
+  margin: 0 auto; }
 
 .progress {
   background: #2db068;
@@ -393,11 +395,8 @@ svg {
         .pages > div > .page > .form > .inputGroup > label,
         .pages > div > .page > .form > .inputGroup > input,
         .pages > div > .page > .form > .inputGroup > select {
-          display: block;
-          flex: 0 1 auto;
+          display: inline-block;
           font-size: 18px; }
-        .pages > div > .page > .form > .inputGroup > label {
-          margin-top: 10px; }
         .pages > div > .page > .form > .required > label {
           font-weight: bold; }
           .pages > div > .page > .form > .required > label:after {
@@ -536,6 +535,25 @@ svg {
   /*Fix the icons on the home page*/
   .mapBtn > svg, .graphBtn > svg, .reportBtn > svg {
     width: 15vh;
-    height: 15vh; } }
+    height: 15vh; }
+  .modal {
+    overflow-y: scroll; }
+  .form {
+    flex-direction: column;
+    padding: 15px;
+    width: 60%;
+    max-width: 800px;
+    margin: 0 auto; }
+    .form > .inputGroup > label {
+      margin-top: 10px;
+      width: 30%; }
+    .form > .inputGroup > input {
+      width: 67%; }
+    .form > .inputGroup > select {
+      width: calc(67% + 10px); }
+  .progressBar {
+    width: 60%; }
+  .step, .stepchild {
+    left: 40%; } }
 
 /*# sourceMappingURL=site.css.map */

@@ -858,16 +858,27 @@ html
 					option Patrol activity reports
 
 				div#map
+			div.section(id="section4")
+				h1.textCenter Charts
+				select
+					option All reports
+					option RISE reports
+					option Domestic disturbance reports
+					option Patrol activity reports
+
+				canvas#myChart
 			
 			//login modal
 			div.modal(id="modal")
 				div.login
-					h2 Log In
-					input#email(v-model="email" placeholder="Email")
-					input#pass(v-model="pass" placeholder="Password" type="password")
+					h2 {{ !signedIn && signUp ? "Sign Up" : "Sign In or Sign Up" }}
+					input#email(v-if="!signedIn" v-model="email" placeholder="Email")
+					input#pass(v-if="!signedIn" v-model="pass" placeholder="Password" type="password")
+					input#name(v-if="signUp" v-model="user.name" placeholder="Name")
 					p#warning {{warning}}
-					div.btnGreen.signInBtn(v-on:click="signIn") Sign In
-					div.btnBlue.signUpBtn(v-on:click="signUp") Sign Up
+					div.btnGreen.signInBtn(v-if="!signedIn && !signUp" v-on:click="signIn") Sign In
+					div.btnBlue.signUpBtn(v-if="!signedIn && !signUp" v-on:click="function(){ signUp = true; }") Sign Up
+					div.btnBlue.signUpBtn(v-if="signUp" v-on:click="signUpUser") Sign Up
 				div.close(v-on:click="closeModal")
 					i.material-icons close
 			//loading splash screen
@@ -1026,6 +1037,11 @@ html
 
 		//firebase
 		script(src="https://www.gstatic.com/firebasejs/3.7.6/firebase.js")
+		//chartjs
+		script(src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.6.0/Chart.js")
+		//DEVLEOPMENT ^
+		//script(src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.6.0/Chart.min.js") 
+		//PROD ^
 		//vue
 		script(src="../public/js/vue.js")  
 		// DEVELOPMENT ^
