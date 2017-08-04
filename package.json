@@ -8,13 +8,11 @@
     "node-sass": "^4.5.3",
     "npm-run-all": "^4.0.2",
     "pug": "^2.0.0-beta11",
-    "start": "index.js",
     "vue": "^2.2.6"
   },
   "devDependencies": {},
   "scripts": {
-    "build-css": "node-sass --recursive --output public/css --source-map true --source-map-contents public/sass ",
-    "start": "index.js"
+    "build-css": "node-sass --recursive --output public/css --source-map true --source-map-contents public/sass "
   },
   "engines":{
     "node": "8.2.1"
