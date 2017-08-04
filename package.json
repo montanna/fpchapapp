@@ -12,8 +12,7 @@
   },
   "devDependencies": {},
   "scripts": {
-    "build-css": "node-sass --recursive --output public/css --source-map true --source-map-contents public/sass ",
-    "start": "index.js"
+    "build-css": "node-sass --recursive --output public/css --source-map true --source-map-contents public/sass "
   },
   "repository": {
     "type": "git",
