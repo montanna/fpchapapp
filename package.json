@@ -1,7 +1,7 @@
 {
   "name": "fpchapapp",
   "version": "1.0.1",
-  "main": "index.js",
+  "main": "app.js",
   "dependencies": {
     "chart.js": "^2.6.0",
     "express": "^4.15.2",
@@ -13,7 +13,7 @@
   "devDependencies": {},
   "scripts": {
     "build-css": "node-sass --recursive --output public/css --source-map true --source-map-contents public/sass ",
-    "start": "index.js"
+    "start": "app.js"
   },
   "engines":{
     "node": "8.2.1"
