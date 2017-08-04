@@ -13,7 +13,7 @@
   "devDependencies": {},
   "scripts": {
     "build-css": "node-sass --recursive --output public/css --source-map true --source-map-contents public/sass ",
-    "start": "app.js"
+    "start": "index.js"
   },
   "engines":{
     "node": "8.2.1"
