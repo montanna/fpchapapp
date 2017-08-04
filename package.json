@@ -15,6 +15,9 @@
     "build-css": "node-sass --recursive --output public/css --source-map true --source-map-contents public/sass ",
     "start": "index.js"
   },
+  "engines":{
+    "node": "8.2.1",
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/montanna/fpchapapp/"
